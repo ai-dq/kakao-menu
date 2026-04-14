@@ -1,0 +1,27 @@
+{
+  "date": "2026-04-15",
+  "updatedAt": "2026-04-15T08:54:17+09:00",
+  "menus": [
+    {
+      "id": "theeatsfood",
+      "name": "TheEatsFood",
+      "sourcePage": "https://pf.kakao.com/_xeVwxnn",
+      "sourceImage": "https://k.kakaocdn.net/dn/chHjRt/dJMcagFbnWF/KQUeatvaa8Rn2KULRxTRaK/img_xl.jpg",
+      "image": "./images/theeatsfood.jpg"
+    },
+    {
+      "id": "hanshin-it-cafeteria",
+      "name": "Hanshin IT Cafeteria",
+      "sourcePage": "https://pf.kakao.com/_QRALxb",
+      "sourceImage": "https://k.kakaocdn.net/dn/byGs3L/dJMcagLWHqH/QrlJymflOuKwEwYvM0s2xK/img_xl.jpg",
+      "image": "./images/hanshin-it-cafeteria.jpg"
+    },
+    {
+      "id": "foodfocus",
+      "name": "FoodFocus",
+      "sourcePage": "https://pf.kakao.com/_uxfhjG/113021355",
+      "sourceImage": "https://k.kakaocdn.net/dn/qI6Er/dJMcajhxiZv/OKQtQlNCfFKKQv7cIkW5K0/img_xl.jpg",
+      "image": "./images/foodfocus.jpg"
+    }
+  ]
+}

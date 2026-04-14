@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kakao Menu Board</title>
+    <meta
+      name="description"
+      content="Daily cafeteria menu board refreshed every weekday at 8:00 AM."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">Daily Menu Board</p>
+        <h1>Three cafeteria feeds, one clean page.</h1>
+        <p class="hero-copy">
+          The board refreshes from Kakao every weekday at 8:00 AM and keeps the
+          latest menu images in one place.
+        </p>
+        <div class="hero-meta">
+          <span id="menu-date">Loading latest date...</span>
+          <span id="updated-at">Preparing latest snapshot...</span>
+        </div>
+      </header>
+
+      <main>
+        <section class="menu-grid" id="menu-grid" aria-live="polite"></section>
+      </main>
+    </div>
+
+    <template id="menu-card-template">
+      <article class="menu-card">
+        <div class="card-header">
+          <div>
+            <p class="card-kicker">Menu Source</p>
+            <h2 class="card-title"></h2>
+          </div>
+          <a class="card-link" target="_blank" rel="noreferrer noopener">Open source</a>
+        </div>
+        <div class="image-frame">
+          <img class="menu-image" alt="" loading="lazy" />
+        </div>
+      </article>
+    </template>
+
+    <script src="./app.js" defer></script>
+  </body>
+  </html>
