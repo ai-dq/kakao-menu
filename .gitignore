@@ -1,0 +1,6 @@
+.env
+.cron.env
+*.log
+*.jpg
+*.jpeg
+*.png
