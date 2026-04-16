@@ -23,8 +23,7 @@ cleanup() {
 trap cleanup EXIT
 
 if [[ -z "$teams_webhook_url" ]]; then
-  echo "TEAMS_WEBHOOK_URL is not set." >&2
-  exit 1
+  echo "TEAMS_WEBHOOK_URL is not set; skipping Teams notification." >&2
 fi
 
 json_escape() {
@@ -323,6 +322,11 @@ if [[ -n "$dry_run" ]]; then
 fi
 
 maybe_push_web_updates
+
+if [[ -z "$teams_webhook_url" ]]; then
+  printf 'No TEAMS_WEBHOOK_URL set; skipping Teams notification.\n'
+  exit 0
+fi
 
 menu_board_url="$(resolve_published_menu_board_url)"
 if ! wait_for_http_ok "$menu_board_url"; then
