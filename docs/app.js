@@ -92,9 +92,22 @@ function formatMenuDate(dateStr) {
 
 function formatUpdatedAt(isoStr) {
   const d = new Date(isoStr);
+  const now = new Date();
   const hh = String(d.getHours()).padStart(2, "0");
   const mm = String(d.getMinutes()).padStart(2, "0");
-  return `오늘 ${hh}:${mm} 업데이트`;
+
+  const isToday =
+    d.getFullYear() === now.getFullYear() &&
+    d.getMonth() === now.getMonth() &&
+    d.getDate() === now.getDate();
+
+  if (isToday) {
+    return `오늘 ${hh}:${mm} 업데이트`;
+  }
+
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  return `${m}/${day} ${hh}:${mm} 업데이트`;
 }
 
 /* ─── Main loader ─── */
