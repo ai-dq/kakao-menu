@@ -1,6 +1,6 @@
 {
   "date": "2026-04-16",
-  "updatedAt": "2026-04-16T09:08:29+09:00",
+  "updatedAt": "2026-04-16T09:14:21+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -35,7 +35,7 @@
       "id": "yoonchef-kolon",
       "name": "윤쉐프 코오롱",
       "sourcePage": "https://pf.kakao.com/_Xxhxkhs",
-      "sourceImage": "https://k.kakaocdn.net/dn/FvQJu/dJMb99MLFcI/gqAKT4SBUlnqqnMkL1T23k/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/PYvUq/dJMcab4Vta2/UsTQ7uRW2AvuaVKciPAfhk/img_xl.jpg",
       "image": "./images/yoonchef-kolon.jpg"
     },
     {
