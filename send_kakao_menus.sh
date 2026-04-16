@@ -187,44 +187,56 @@ publish_web_assets() {
     {
       "id": "theeatsfood",
       "name": "TheEatsFood",
+      "displayName": "더이츠푸드",
       "sourcePage": "https://pf.kakao.com/_xeVwxnn",
       "sourceImage": ${theeats_url_json},
-      "image": "./images/theeatsfood.jpg"
+      "image": "./images/theeatsfood.jpg",
+      "naverMap": "https://map.naver.com/v5/search/더이츠푸드"
     },
     {
       "id": "hanshin-it-cafeteria",
       "name": "Hanshin IT Cafeteria",
+      "displayName": "한신IT 구내식당",
       "sourcePage": "https://pf.kakao.com/_QRALxb",
       "sourceImage": ${hanshin_url_json},
-      "image": "./images/hanshin-it-cafeteria.jpg"
+      "image": "./images/hanshin-it-cafeteria.jpg",
+      "naverMap": "https://map.naver.com/v5/search/한신IT구내식당"
     },
     {
       "id": "foodfocus",
       "name": "FoodFocus",
+      "displayName": "푸드포커스",
       "sourcePage": "https://pf.kakao.com/_uxfhjG/113021355",
       "sourceImage": ${foodfocus_url_json},
-      "image": "./images/foodfocus.jpg"
+      "image": "./images/foodfocus.jpg",
+      "naverMap": "https://map.naver.com/v5/search/푸드포커스"
     },
     {
       "id": "onjeong-hansik-buffet",
       "name": "온정 한식 뷔페",
+      "displayName": "온정 한식 뷔페",
       "sourcePage": "https://pf.kakao.com/_BdwNn/posts",
       "sourceImage": ${onjeong_url_json},
-      "image": "./images/onjeong-hansik-buffet.jpg"
+      "image": "./images/onjeong-hansik-buffet.jpg",
+      "naverMap": "https://map.naver.com/v5/search/온정한식뷔페"
     },
     {
       "id": "yoonchef-kolon",
       "name": "윤쉐프 코오롱",
+      "displayName": "윤쉐프 코오롱",
       "sourcePage": "https://pf.kakao.com/_Xxhxkhs",
       "sourceImage": ${yoonchef_kolon_url_json},
-      "image": "./images/yoonchef-kolon.jpg"
+      "image": "./images/yoonchef-kolon.jpg",
+      "naverMap": "https://map.naver.com/v5/search/윤쉐프코오롱"
     },
     {
       "id": "byeoksan-theeroom",
       "name": "벽산더이룸",
+      "displayName": "벽산더이룸",
       "sourcePage": "https://pf.kakao.com/_xdLzxgG",
       "sourceImage": ${byeoksan_theeroom_url_json},
-      "image": "./images/byeoksan-theeroom.jpg"
+      "image": "./images/byeoksan-theeroom.jpg",
+      "naverMap": "https://map.naver.com/v5/search/벽산더이룸"
     }
   ]
 }
