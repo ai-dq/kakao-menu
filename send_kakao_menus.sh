@@ -190,7 +190,9 @@ publish_web_assets() {
       "sourcePage": "https://pf.kakao.com/_xeVwxnn",
       "sourceImage": ${theeats_url_json},
       "image": "./images/theeatsfood.jpg",
-      "naverMap": "https://map.naver.com/v5/search/더이츠푸드"
+      "naverMap": "https://map.naver.com/v5/search/더이츠푸드",
+      "lat": 37.4849,
+      "lng": 126.8958
     },
     {
       "id": "hanshin-it-cafeteria",
@@ -199,7 +201,9 @@ publish_web_assets() {
       "sourcePage": "https://pf.kakao.com/_QRALxb",
       "sourceImage": ${hanshin_url_json},
       "image": "./images/hanshin-it-cafeteria.jpg",
-      "naverMap": "https://map.naver.com/v5/search/한신IT구내식당"
+      "naverMap": "https://map.naver.com/v5/search/한신IT구내식당",
+      "lat": 37.4837,
+      "lng": 126.8955
     },
     {
       "id": "foodfocus",
@@ -208,7 +212,9 @@ publish_web_assets() {
       "sourcePage": "https://pf.kakao.com/_uxfhjG/113021355",
       "sourceImage": ${foodfocus_url_json},
       "image": "./images/foodfocus.jpg",
-      "naverMap": "https://map.naver.com/v5/search/푸드포커스"
+      "naverMap": "https://map.naver.com/v5/search/푸드포커스",
+      "lat": 37.4843,
+      "lng": 126.8963
     },
     {
       "id": "onjeong-hansik-buffet",
@@ -217,7 +223,9 @@ publish_web_assets() {
       "sourcePage": "https://pf.kakao.com/_BdwNn/posts",
       "sourceImage": ${onjeong_url_json},
       "image": "./images/onjeong-hansik-buffet.jpg",
-      "naverMap": "https://map.naver.com/v5/search/온정한식뷔페"
+      "naverMap": "https://map.naver.com/v5/search/온정한식뷔페",
+      "lat": 37.4850,
+      "lng": 126.8970
     },
     {
       "id": "yoonchef-kolon",
@@ -226,7 +234,9 @@ publish_web_assets() {
       "sourcePage": "https://pf.kakao.com/_Xxhxkhs",
       "sourceImage": ${yoonchef_kolon_url_json},
       "image": "./images/yoonchef-kolon.jpg",
-      "naverMap": "https://map.naver.com/v5/search/윤쉐프코오롱"
+      "naverMap": "https://map.naver.com/v5/search/윤쉐프코오롱",
+      "lat": 37.4853,
+      "lng": 126.8931
     },
     {
       "id": "byeoksan-theeroom",
@@ -235,7 +245,9 @@ publish_web_assets() {
       "sourcePage": "https://pf.kakao.com/_xdLzxgG",
       "sourceImage": ${byeoksan_theeroom_url_json},
       "image": "./images/byeoksan-theeroom.jpg",
-      "naverMap": "https://map.naver.com/v5/search/벽산더이룸"
+      "naverMap": "https://map.naver.com/v5/search/벽산더이룸",
+      "lat": 37.4856,
+      "lng": 126.8942
     }
   ]
 }

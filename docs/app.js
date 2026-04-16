@@ -157,11 +157,60 @@ async function loadBoard() {
     // Activate interactions
     observeCards();
     initLightbox();
+    initMap(data.menus);
   } catch (error) {
     dateEl.textContent = "메뉴 데이터를 불러올 수 없습니다.";
     updatedEl.textContent = "새로고침 스크립트를 실행해 주세요.";
     grid.innerHTML = `<div class="empty-state">${error.message}</div>`;
   }
+}
+
+/* ─── Map ─── */
+function initMap(menus) {
+  const mapEl = document.getElementById("map");
+  if (!mapEl || typeof L === "undefined") return;
+
+  const locations = menus.filter((m) => m.lat && m.lng);
+  if (locations.length === 0) return;
+
+  const center = [
+    locations.reduce((s, m) => s + m.lat, 0) / locations.length,
+    locations.reduce((s, m) => s + m.lng, 0) / locations.length,
+  ];
+
+  const map = L.map("map", {
+    center: center,
+    zoom: 16,
+    scrollWheelZoom: false,
+  });
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19,
+  }).addTo(map);
+
+  const brandIcon = L.divIcon({
+    className: "map-marker",
+    html: '<svg width="28" height="36" viewBox="0 0 28 36" fill="none"><path d="M14 0C6.268 0 0 6.268 0 14c0 10.5 14 22 14 22s14-11.5 14-22C28 6.268 21.732 0 14 0z" fill="#ff385c"/><circle cx="14" cy="13" r="5.5" fill="#fff"/></svg>',
+    iconSize: [28, 36],
+    iconAnchor: [14, 36],
+    popupAnchor: [0, -34],
+  });
+
+  locations.forEach((menu) => {
+    const name = menu.displayName || menu.name;
+    const popupHtml = `
+      <div class="map-popup-title">${name}</div>
+      ${menu.naverMap ? `<a class="map-popup-link" href="${menu.naverMap}" target="_blank" rel="noreferrer noopener">네이버 지도에서 보기</a>` : ""}
+    `;
+    L.marker([menu.lat, menu.lng], { icon: brandIcon })
+      .addTo(map)
+      .bindPopup(popupHtml, { closeButton: false, minWidth: 140 });
+  });
+
+  // fit bounds with padding
+  const bounds = L.latLngBounds(locations.map((m) => [m.lat, m.lng]));
+  map.fitBounds(bounds, { padding: [40, 40], maxZoom: 16 });
 }
 
 loadBoard();
