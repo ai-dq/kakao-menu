@@ -66,6 +66,47 @@ resolve_published_menu_board_url() {
   exit 1
 }
 
+resolve_published_site_url() {
+  local explicit_site_url="${PUBLISHED_SITE_URL:-}"
+  local explicit_image_url="${PUBLISHED_MENU_BOARD_URL:-}"
+  local base_url="${PUBLISHED_BASE_URL:-}"
+  local remote_url=""
+  local owner=""
+  local repo=""
+
+  if [[ -n "$explicit_site_url" ]]; then
+    printf '%s\n' "${explicit_site_url%/}/"
+    return
+  fi
+
+  if [[ -n "$base_url" ]]; then
+    printf '%s/\n' "${base_url%/}"
+    return
+  fi
+
+  if [[ "$explicit_image_url" =~ ^(https?://.+)/images/menu-board\.jpg(\?.*)?$ ]]; then
+    printf '%s/\n' "${BASH_REMATCH[1]%/}"
+    return
+  fi
+
+  remote_url="$(git -C "$script_dir" remote get-url origin 2>/dev/null || true)"
+  if [[ "$remote_url" =~ github\.com[:/]([^/]+)/([^/.]+)(\.git)?$ ]]; then
+    owner="${BASH_REMATCH[1]}"
+    repo="${BASH_REMATCH[2]}"
+
+    if [[ "$repo" == "${owner}.github.io" ]]; then
+      printf 'https://%s.github.io/\n' "$owner"
+    else
+      printf 'https://%s.github.io/%s/\n' "$owner" "$repo"
+    fi
+    return
+  fi
+
+  echo "Could not determine a public site URL for the published menu board." >&2
+  echo "Set PUBLISHED_SITE_URL, PUBLISHED_BASE_URL, or PUBLISHED_MENU_BOARD_URL." >&2
+  exit 1
+}
+
 add_cache_bust() {
   local url="$1"
   local separator='?'
@@ -277,12 +318,13 @@ if ! wait_for_http_ok "$menu_board_url"; then
   exit 1
 fi
 
+published_site_url="$(resolve_published_site_url)"
 menu_board_url="$(add_cache_bust "$menu_board_url")"
 
 payload_file="${work_dir}/teams-payload.json"
 
 cat > "$payload_file" <<EOF
-{"type":"message","attachments":[{"contentType":"application/vnd.microsoft.card.adaptive","content":{"\$schema":"http://adaptivecards.io/schemas/adaptive-card.json","type":"AdaptiveCard","version":"1.4","body":[{"type":"TextBlock","text":$(json_escape "${default_date} cafeteria menu board"),"wrap":true,"weight":"Bolder"},{"type":"Image","url":$(json_escape "$menu_board_url"),"size":"Stretch"}]}}]}
+{"type":"message","attachments":[{"contentType":"application/vnd.microsoft.card.adaptive","content":{"\$schema":"http://adaptivecards.io/schemas/adaptive-card.json","type":"AdaptiveCard","version":"1.4","body":[{"type":"TextBlock","text":$(json_escape "${default_date} cafeteria menu board"),"wrap":true,"weight":"Bolder"},{"type":"Image","url":$(json_escape "$menu_board_url"),"size":"Stretch"},{"type":"TextBlock","text":$(json_escape "$published_site_url"),"wrap":true,"isSubtle":true,"spacing":"Small"}]}}]}
 EOF
 
 curl -fsSL -X POST \
