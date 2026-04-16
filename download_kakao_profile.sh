@@ -90,7 +90,12 @@ EOF
 if [[ -n "$css_selector" ]]; then
   image_url="$(extract_selector_image_url "$css_selector")"
   if [[ -z "$image_url" ]]; then
-    echo "Could not resolve selector image in: $channel_url" >&2
+    html="$(curl -fsSL "$channel_url")"
+    image_url="$(extract_og_image_url "$html")"
+  fi
+
+  if [[ -z "$image_url" ]]; then
+    echo "Could not resolve selector or og:image in: $channel_url" >&2
     exit 1
   fi
 else
