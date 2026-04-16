@@ -4,5 +4,9 @@
 *.jpg
 *.jpeg
 *.png
+!docs/images/
+!docs/images/*.jpg
+!docs/images/*.jpeg
+!docs/images/*.png
 __pycache__
 .playwright-cli

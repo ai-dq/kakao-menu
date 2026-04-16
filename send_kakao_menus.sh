@@ -31,6 +31,73 @@ json_escape() {
   perl -MJSON::PP -MEncode=decode -e 'binmode STDOUT, ":utf8"; print encode_json(decode("UTF-8", $ARGV[0]))' "$1"
 }
 
+resolve_published_menu_board_url() {
+  local explicit_url="${PUBLISHED_MENU_BOARD_URL:-}"
+  local base_url="${PUBLISHED_BASE_URL:-}"
+  local remote_url=""
+  local owner=""
+  local repo=""
+
+  if [[ -n "$explicit_url" ]]; then
+    printf '%s\n' "$explicit_url"
+    return
+  fi
+
+  if [[ -n "$base_url" ]]; then
+    printf '%s/images/menu-board.jpg\n' "${base_url%/}"
+    return
+  fi
+
+  remote_url="$(git -C "$script_dir" remote get-url origin 2>/dev/null || true)"
+  if [[ "$remote_url" =~ github\.com[:/]([^/]+)/([^/.]+)(\.git)?$ ]]; then
+    owner="${BASH_REMATCH[1]}"
+    repo="${BASH_REMATCH[2]}"
+
+    if [[ "$repo" == "${owner}.github.io" ]]; then
+      printf 'https://%s.github.io/images/menu-board.jpg\n' "$owner"
+    else
+      printf 'https://%s.github.io/%s/images/menu-board.jpg\n' "$owner" "$repo"
+    fi
+    return
+  fi
+
+  echo "Could not determine a public URL for docs/images/menu-board.jpg." >&2
+  echo "Set PUBLISHED_MENU_BOARD_URL or PUBLISHED_BASE_URL." >&2
+  exit 1
+}
+
+add_cache_bust() {
+  local url="$1"
+  local separator='?'
+
+  if [[ "$url" == *\?* ]]; then
+    separator='&'
+  fi
+
+  printf '%s%sv=%s\n' "$url" "$separator" "$(date +%s)"
+}
+
+wait_for_http_ok() {
+  local url="$1"
+  local attempts="${2:-12}"
+  local sleep_seconds="${3:-5}"
+  local attempt=1
+
+  while (( attempt <= attempts )); do
+    if curl -fsI -L "$url" >/dev/null 2>&1; then
+      return 0
+    fi
+
+    if (( attempt < attempts )); then
+      sleep "$sleep_seconds"
+    fi
+
+    (( attempt += 1 ))
+  done
+
+  return 1
+}
+
 extract_source_url() {
   local log_file="$1"
   perl -ne 'if (/^Source image URL: (.+)$/) { $last = $1 } END { print $last if defined $last }' "$log_file"
@@ -197,8 +264,6 @@ byeoksan_theeroom_url_json="$(json_escape "$byeoksan_theeroom_url")"
 
 publish_web_assets
 
-menu_board_data_uri="data:image/jpeg;base64,$(base64 "${docs_images_dir}/menu-board.jpg" | tr -d '\n')"
-
 if [[ -n "$dry_run" ]]; then
   printf 'Dry run enabled; skipping Teams webhook post.\n'
   exit 0
@@ -206,10 +271,18 @@ fi
 
 maybe_push_web_updates
 
+menu_board_url="$(resolve_published_menu_board_url)"
+if ! wait_for_http_ok "$menu_board_url"; then
+  echo "Published menu board URL is not reachable yet: $menu_board_url" >&2
+  exit 1
+fi
+
+menu_board_url="$(add_cache_bust "$menu_board_url")"
+
 payload_file="${work_dir}/teams-payload.json"
 
 cat > "$payload_file" <<EOF
-{"type":"message","attachments":[{"contentType":"application/vnd.microsoft.card.adaptive","content":{"\$schema":"http://adaptivecards.io/schemas/adaptive-card.json","type":"AdaptiveCard","version":"1.4","body":[{"type":"TextBlock","text":$(json_escape "${default_date} cafeteria menu board"),"wrap":true,"weight":"Bolder"},{"type":"Image","url":"${menu_board_data_uri}","size":"Stretch"}]}}]}
+{"type":"message","attachments":[{"contentType":"application/vnd.microsoft.card.adaptive","content":{"\$schema":"http://adaptivecards.io/schemas/adaptive-card.json","type":"AdaptiveCard","version":"1.4","body":[{"type":"TextBlock","text":$(json_escape "${default_date} cafeteria menu board"),"wrap":true,"weight":"Bolder"},{"type":"Image","url":$(json_escape "$menu_board_url"),"size":"Stretch"}]}}]}
 EOF
 
 curl -fsSL -X POST \
