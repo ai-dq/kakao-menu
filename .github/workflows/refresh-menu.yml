@@ -2,8 +2,11 @@ name: Refresh Menu Board
 
 on:
   schedule:
-    # 매일 오전 10시 KST (UTC+9) = UTC 01:00
-    - cron: "0 1 * * 1-5"
+    # GitHub Actions scheduled workflows can be delayed or dropped around the top
+    # of the hour, so use a few minutes of offset from 10:00 KST.
+    # 평일 오전 10시 7분 KST
+    - cron: "7 10 * * 1-5"
+      timezone: "Asia/Seoul"
   workflow_dispatch: # 수동 실행 버튼
 
 permissions:
