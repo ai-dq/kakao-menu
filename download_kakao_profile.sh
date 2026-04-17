@@ -35,10 +35,13 @@ extract_og_image_url() {
 
 extract_selector_image_url() {
   local selector="$1"
-  local session_name="kakao-menu-$$-$RANDOM"
+  local session_name="km-$RANDOM"
   local raw_output=""
   local eval_script=""
   local selector_json=""
+  local extracted_url=""
+  local attempt=1
+  local max_attempts=8
 
   if ! command -v npx >/dev/null 2>&1; then
     echo "npx is required for selector-based downloads." >&2
@@ -46,7 +49,7 @@ extract_selector_image_url() {
   fi
 
   selector_json="$(json_escape "$selector")"
-  eval_script="$(cat <<'EOF'
+  eval_script="$(cat <<EOF
 () => {
   const selector = __SELECTOR__;
   const el = document.querySelector(selector);
@@ -64,27 +67,50 @@ extract_selector_image_url() {
   }
 
   const backgroundImage = getComputedStyle(el).backgroundImage || "";
-  const match = backgroundImage.match(/^url\((["']?)(.*?)\1\)$/);
-  return match ? match[2] : "";
+  if (!backgroundImage.startsWith("url(")) {
+    return "";
+  }
+
+  let raw = backgroundImage.slice(4, -1).trim();
+  const doubleQuote = String.fromCharCode(34);
+  const singleQuote = String.fromCharCode(39);
+  if (
+    (raw.startsWith(doubleQuote) && raw.endsWith(doubleQuote)) ||
+    (raw.startsWith(singleQuote) && raw.endsWith(singleQuote))
+  ) {
+    raw = raw.slice(1, -1);
+  }
+
+  return raw;
 }
 EOF
 )"
   eval_script="${eval_script/__SELECTOR__/$selector_json}"
 
-  if ! npx --yes --package @playwright/cli playwright-cli --session "$session_name" open "$channel_url" >/dev/null 2>&1; then
+  if ! npx --yes --package @playwright/cli playwright-cli --session "$session_name" open "$channel_url" >&2; then
     echo "Failed to open page for selector extraction: $channel_url" >&2
     return 1
   fi
 
-  raw_output="$(
-    npx --yes --package @playwright/cli playwright-cli --session "$session_name" --raw eval "$eval_script"
-  )" || {
-    npx --yes --package @playwright/cli playwright-cli --session "$session_name" close >/dev/null 2>&1 || true
-    return 1
-  }
+  while (( attempt <= max_attempts )); do
+    raw_output="$(
+      npx --yes --package @playwright/cli playwright-cli --session "$session_name" --raw eval "$eval_script"
+    )" || {
+      npx --yes --package @playwright/cli playwright-cli --session "$session_name" close >&2 || true
+      return 1
+    }
 
-  npx --yes --package @playwright/cli playwright-cli --session "$session_name" close >/dev/null 2>&1 || true
-  printf '%s' "$raw_output" | decode_json_string
+    extracted_url="$(printf '%s' "$raw_output" | decode_json_string)"
+    if [[ -n "$extracted_url" ]]; then
+      break
+    fi
+
+    sleep 1
+    (( attempt += 1 ))
+  done
+
+  npx --yes --package @playwright/cli playwright-cli --session "$session_name" close >&2 || true
+  printf '%s' "$extracted_url"
 }
 
 if [[ -n "$css_selector" ]]; then
