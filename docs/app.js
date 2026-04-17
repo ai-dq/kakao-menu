@@ -110,6 +110,15 @@ function formatUpdatedAt(isoStr) {
   return `${m}/${day} ${hh}:${mm} 업데이트`;
 }
 
+function withCacheBust(url, version) {
+  if (!url) {
+    return url;
+  }
+
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}v=${encodeURIComponent(version)}`;
+}
+
 /* ─── Main loader ─── */
 async function loadBoard() {
   const dateEl = document.querySelector("#menu-date");
@@ -148,7 +157,7 @@ async function loadBoard() {
       } else {
         naverLink.style.display = "none";
       }
-      image.src = menu.image;
+      image.src = withCacheBust(menu.image, data.updatedAt);
       image.alt = `${menu.displayName || menu.name} 메뉴 이미지 (${data.date})`;
 
       grid.appendChild(card);
