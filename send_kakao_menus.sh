@@ -26,6 +26,24 @@ if [[ -z "$teams_webhook_url" ]]; then
   echo "TEAMS_WEBHOOK_URL is not set; skipping Teams notification." >&2
 fi
 
+has_valid_teams_webhook_url() {
+  local url="$1"
+
+  if [[ -z "$url" ]]; then
+    return 1
+  fi
+
+  if [[ ! "$url" =~ ^https:// ]]; then
+    return 1
+  fi
+
+  if [[ "$url" == *"example.invalid"* || "$url" == *"replace-with-your-teams-webhook"* ]]; then
+    return 1
+  fi
+
+  return 0
+}
+
 json_escape() {
   perl -MJSON::PP -MEncode=decode -e 'binmode STDOUT, ":utf8"; print encode_json(decode("UTF-8", $ARGV[0]))' "$1"
 }
@@ -335,8 +353,8 @@ fi
 
 maybe_push_web_updates
 
-if [[ -z "$teams_webhook_url" ]]; then
-  printf 'No TEAMS_WEBHOOK_URL set; skipping Teams notification.\n'
+if ! has_valid_teams_webhook_url "$teams_webhook_url"; then
+  printf 'No valid TEAMS_WEBHOOK_URL set; skipping Teams notification.\n'
   exit 0
 fi
 
