@@ -1,6 +1,6 @@
 {
   "date": "2026-04-17",
-  "updatedAt": "2026-04-17T10:38:32+09:00",
+  "updatedAt": "2026-04-17T10:50:27+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -8,7 +8,7 @@
       "name": "TheEatsFood",
       "displayName": "더이츠푸드",
       "sourcePage": "https://pf.kakao.com/_xeVwxnn",
-      "sourceImage": "https://k.kakaocdn.net/dn/s2nqw/dJMcaaLKmMi/TbW6v1usCGtIo3ZQ9djJik/img_m.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/s2nqw/dJMcaaLKmMi/TbW6v1usCGtIo3ZQ9djJik/img_xl.jpg",
       "image": "./images/theeatsfood.jpg",
       "naverMap": "https://map.naver.com/v5/search/더이츠푸드",
       "lat": 37.4849,
@@ -19,7 +19,7 @@
       "name": "Hanshin IT Cafeteria",
       "displayName": "한신IT 구내식당",
       "sourcePage": "https://pf.kakao.com/_QRALxb",
-      "sourceImage": "https://k.kakaocdn.net/dn/LSewX/dJMcacpfPl8/crlr9GJX9GPkca4vTsrQ6k/img_m.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/LSewX/dJMcacpfPl8/crlr9GJX9GPkca4vTsrQ6k/img_xl.jpg",
       "image": "./images/hanshin-it-cafeteria.jpg",
       "naverMap": "https://map.naver.com/v5/search/한신IT구내식당",
       "lat": 37.4837,
@@ -30,7 +30,7 @@
       "name": "FoodFocus",
       "displayName": "푸드포커스",
       "sourcePage": "https://pf.kakao.com/_uxfhjG/113021355",
-      "sourceImage": "https://k.kakaocdn.net/dn/5Wwmx/dJMcahD4lc9/XrQ2RPeWUIltwHYR4qnyKk/img_l.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/5Wwmx/dJMcahD4lc9/XrQ2RPeWUIltwHYR4qnyKk/img_xl.jpg",
       "image": "./images/foodfocus.jpg",
       "naverMap": "https://map.naver.com/v5/search/푸드포커스",
       "lat": 37.4843,
