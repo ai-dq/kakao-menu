@@ -174,8 +174,11 @@ a {
 .image-frame {
   position: relative;
   overflow: hidden;
-  cursor: zoom-in;
   background: var(--surface);
+}
+
+.image-frame[data-has-image="true"] {
+  cursor: zoom-in;
 }
 
 .menu-image {
@@ -184,8 +187,45 @@ a {
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.image-frame:hover .menu-image {
+.image-frame[data-has-image="true"]:hover .menu-image {
   transform: scale(1.03);
+}
+
+.image-frame--missing {
+  min-height: 420px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 56, 92, 0.12), transparent 34%),
+    linear-gradient(160deg, #f7f7f7 0%, #efefef 100%);
+}
+
+.image-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 14px;
+  min-height: 420px;
+  padding: 28px;
+}
+
+.image-placeholder-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 56, 92, 0.12);
+  color: var(--brand-dark);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.image-placeholder-copy {
+  max-width: 20ch;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.96rem;
+  font-weight: 500;
+  line-height: 1.55;
 }
 
 /* ─── Card Body ─── */

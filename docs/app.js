@@ -40,7 +40,7 @@ function initLightbox() {
   const overlayTitle = overlay.querySelector(".lightbox-title");
   const closeBtn = overlay.querySelector(".lightbox-close");
 
-  document.querySelectorAll(".image-frame").forEach((frame) => {
+  document.querySelectorAll('.image-frame[data-has-image="true"]').forEach((frame) => {
     frame.addEventListener("click", () => {
       const img = frame.querySelector("img");
       const card = frame.closest(".menu-card");
@@ -146,19 +146,38 @@ async function loadBoard() {
     for (const menu of data.menus) {
       const card = template.content.firstElementChild.cloneNode(true);
       const title = card.querySelector(".card-title");
+      const kicker = card.querySelector(".card-kicker");
+      const frame = card.querySelector(".image-frame");
       const sourceLink = card.querySelector(".card-link--source");
       const naverLink = card.querySelector(".card-link--naver");
       const image = card.querySelector(".menu-image");
+      const hasImage = Boolean(menu.image);
 
       title.textContent = menu.displayName || menu.name;
+      kicker.textContent = hasImage ? "Menu Source" : "Menu Pending";
+      frame.dataset.hasImage = hasImage ? "true" : "false";
       sourceLink.href = menu.sourcePage;
       if (menu.naverMap) {
         naverLink.href = menu.naverMap;
       } else {
         naverLink.style.display = "none";
       }
-      image.src = withCacheBust(menu.image, data.updatedAt);
-      image.alt = `${menu.displayName || menu.name} 메뉴 이미지 (${data.date})`;
+
+      if (hasImage) {
+        image.src = withCacheBust(menu.image, data.updatedAt);
+        image.alt = `${menu.displayName || menu.name} 메뉴 이미지 (${data.date})`;
+      } else {
+        frame.classList.add("image-frame--missing");
+        image.remove();
+
+        const placeholder = document.createElement("div");
+        placeholder.className = "image-placeholder";
+        placeholder.innerHTML = `
+          <span class="image-placeholder-badge">메뉴 미등록</span>
+          <p class="image-placeholder-copy">카카오 채널에 아직 메뉴 이미지가 올라오지 않았습니다.</p>
+        `;
+        frame.appendChild(placeholder);
+      }
 
       grid.appendChild(card);
     }
