@@ -1,6 +1,6 @@
 {
   "date": "2026-04-21",
-  "updatedAt": "2026-04-21T08:45:43+09:00",
+  "updatedAt": "2026-04-21T10:00:16+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -41,7 +41,7 @@
       "name": "온정 한식 뷔페",
       "displayName": "온정 한식 뷔페",
       "sourcePage": "https://pf.kakao.com/_BdwNn/posts",
-      "sourceImage": "https://k.kakaocdn.net/dn/KRrww/dJMcagZva6u/7xqRkegbZIlBJi3rsRlak1/img.png",
+      "sourceImage": "https://k.kakaocdn.net/dn/NSVJ1/dJMcaju92HA/btWqkwiYdGY22ktFKNnHo1/img.png",
       "image": "./images/onjeong-hansik-buffet.jpg",
       "naverMap": "https://map.naver.com/v5/search/온정한식뷔페",
       "lat": 37.4850,
@@ -52,7 +52,7 @@
       "name": "윤쉐프 코오롱",
       "displayName": "윤쉐프 코오롱",
       "sourcePage": "https://pf.kakao.com/_Xxhxkhs",
-      "sourceImage": "https://k.kakaocdn.net/dn/bTv9QZ/dJMcagrFJr0/E4yjZOVezNI7jjA99P8ZA0/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/bZE52C/dJMcadPc46n/u9xKaYVDijsac1hnLqePR0/img_xl.jpg",
       "image": "./images/yoonchef-kolon.jpg",
       "naverMap": "https://map.naver.com/v5/search/윤쉐프코오롱",
       "lat": 37.4853,
@@ -63,7 +63,7 @@
       "name": "벽산더이룸",
       "displayName": "벽산더이룸",
       "sourcePage": "https://pf.kakao.com/_xdLzxgG",
-      "sourceImage": "https://k.kakaocdn.net/dn/baozxA/dJMcaiweCnq/t7uDoq4I0Cxv9qsaHVzKW0/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/H1ZQ9/dJMcaciw180/fCR3KNpF3vpPgNMm5hio60/img_xl.jpg",
       "image": "./images/byeoksan-theeroom.jpg",
       "naverMap": "https://map.naver.com/v5/search/벽산더이룸",
       "lat": 37.4856,
