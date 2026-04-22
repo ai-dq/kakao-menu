@@ -22,6 +22,13 @@ LABEL_BACKGROUND = (238, 238, 238)
 LABEL_TEXT = (32, 32, 32)
 JPEG_QUALITIES = (88, 84, 80, 76, 72, 68, 64)
 TARGET_BYTES = 1_000_000
+PLACEHOLDER_BACKGROUND = (248, 248, 248)
+PLACEHOLDER_PANEL = (255, 255, 255)
+PLACEHOLDER_BORDER = (225, 225, 225)
+PLACEHOLDER_ACCENT = (255, 56, 92)
+PLACEHOLDER_TITLE = (28, 28, 28)
+PLACEHOLDER_TEXT = (110, 110, 110)
+PLACEHOLDER_HEIGHT = 1180
 FONT_CANDIDATES = (
     "/usr/share/fonts/truetype/nanum/NanumSquareB.ttf",
     "/usr/share/fonts/truetype/nanum/NanumGothicBold.ttf",
@@ -68,6 +75,59 @@ def build_labeled_tile(image: Image.Image, label: str) -> Image.Image:
     return tile
 
 
+def build_placeholder_image() -> Image.Image:
+    image = Image.new("RGB", (TILE_WIDTH, PLACEHOLDER_HEIGHT), PLACEHOLDER_BACKGROUND)
+    draw = ImageDraw.Draw(image)
+
+    panel_margin = 64
+    panel_box = (
+        panel_margin,
+        panel_margin,
+        TILE_WIDTH - panel_margin,
+        PLACEHOLDER_HEIGHT - panel_margin,
+    )
+    draw.rounded_rectangle(
+        panel_box,
+        radius=36,
+        fill=PLACEHOLDER_PANEL,
+        outline=PLACEHOLDER_BORDER,
+        width=3,
+    )
+
+    accent_box = (panel_box[0] + 56, panel_box[1] + 56, panel_box[0] + 240, panel_box[1] + 72)
+    draw.rounded_rectangle(accent_box, radius=8, fill=PLACEHOLDER_ACCENT)
+
+    title = "메뉴 미등록"
+    title_font = load_font(54)
+    title_bbox = draw.textbbox((0, 0), title, font=title_font)
+    title_x = (TILE_WIDTH - (title_bbox[2] - title_bbox[0])) / 2 - title_bbox[0]
+    title_y = PLACEHOLDER_HEIGHT / 2 - 108
+    draw.text((title_x, title_y), title, fill=PLACEHOLDER_TITLE, font=title_font)
+
+    body = "카카오 채널에\n아직 메뉴 이미지가 없습니다."
+    body_font = load_font(34)
+    body_bbox = draw.multiline_textbbox((0, 0), body, font=body_font, spacing=14, align="center")
+    body_x = (TILE_WIDTH - (body_bbox[2] - body_bbox[0])) / 2 - body_bbox[0]
+    body_y = PLACEHOLDER_HEIGHT / 2 + 8
+    draw.multiline_text(
+        (body_x, body_y),
+        body,
+        fill=PLACEHOLDER_TEXT,
+        font=body_font,
+        spacing=14,
+        align="center",
+    )
+
+    footnote = "다음 자동 실행에서 다시 확인합니다."
+    footnote_font = load_font(24)
+    footnote_bbox = draw.textbbox((0, 0), footnote, font=footnote_font)
+    footnote_x = (TILE_WIDTH - (footnote_bbox[2] - footnote_bbox[0])) / 2 - footnote_bbox[0]
+    footnote_y = body_y + (body_bbox[3] - body_bbox[1]) + 52
+    draw.text((footnote_x, footnote_y), footnote, fill=PLACEHOLDER_TEXT, font=footnote_font)
+
+    return image
+
+
 def save_with_size_budget(canvas: Image.Image, output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -91,9 +151,12 @@ def build_board(output_path: Path, items: list[tuple[str, Path]]) -> None:
     row_heights = []
 
     for index, (label, image_path) in enumerate(items):
-        with Image.open(image_path) as source:
-            converted = source.convert("RGB")
-        resized = resize_to_width(converted, TILE_WIDTH)
+        if image_path.exists():
+            with Image.open(image_path) as source:
+                converted = source.convert("RGB")
+            resized = resize_to_width(converted, TILE_WIDTH)
+        else:
+            resized = build_placeholder_image()
         tile = build_labeled_tile(resized, label)
         resized_images.append(tile)
 

@@ -15,6 +15,17 @@ docs_images_dir="${docs_dir}/images"
 docs_data_dir="${docs_dir}/data"
 dry_run="${DRY_RUN:-}"
 work_dir="$(mktemp -d)"
+home_dir="${HOME:-$(cd "${script_dir}/.." && pwd)}"
+local_bin_dir="${home_dir}/.local/bin"
+fnm_default_bin="${home_dir}/.local/share/fnm/aliases/default/bin"
+
+if [[ -d "$local_bin_dir" ]]; then
+  export PATH="${local_bin_dir}:${PATH}"
+fi
+
+if [[ -d "$fnm_default_bin" ]]; then
+  export PATH="${fnm_default_bin}:${PATH}"
+fi
 
 cleanup() {
   rm -rf "$work_dir"
@@ -46,6 +57,16 @@ has_valid_teams_webhook_url() {
 
 json_escape() {
   perl -MJSON::PP -MEncode=decode -e 'binmode STDOUT, ":utf8"; print encode_json(decode("UTF-8", $ARGV[0]))' "$1"
+}
+
+json_or_null() {
+  local value="${1:-}"
+
+  if [[ -n "$value" ]]; then
+    json_escape "$value"
+  else
+    printf 'null'
+  fi
 }
 
 resolve_published_menu_board_url() {
@@ -124,6 +145,33 @@ resolve_published_site_url() {
   exit 1
 }
 
+get_previous_source_image() {
+  local target_id="$1"
+  local json_file="${docs_dir}/data/latest.json"
+  local today="$(date +%F)"
+
+  if [[ ! -f "$json_file" ]]; then
+    return
+  fi
+
+  perl -MJSON::PP -e '
+    my ($id, $today) = @ARGV;
+    my $json = do { local $/; <STDIN> };
+    eval {
+      my $data = decode_json($json);
+      # Only return previous URL if the record is from a different day
+      if ($data->{date} ne $today) {
+        for my $menu (@{$data->{menus}}) {
+          if ($menu->{id} eq $id && defined $menu->{sourceImage}) {
+            print $menu->{sourceImage};
+            last;
+          }
+        }
+      }
+    };
+  ' "$target_id" "$today" < "$json_file"
+}
+
 add_cache_bust() {
   local url="$1"
   local separator='?'
@@ -135,15 +183,38 @@ add_cache_bust() {
   printf '%s%sv=%s\n' "$url" "$separator" "$(date +%s)"
 }
 
-wait_for_http_ok() {
-  local url="$1"
-  local attempts="${2:-12}"
-  local sleep_seconds="${3:-5}"
+wait_for_deployment() {
+  local site_url="$1"
+  local expected_date="$2"
+  local attempts="${3:-30}"
+  local sleep_seconds="${4:-10}"
   local attempt=1
+  local latest_json_url="${site_url%/}/data/latest.json"
+
+  printf "Waiting for deployment to finish at %s (expecting date %s)...\n" "$latest_json_url" "$expected_date" >&2
 
   while (( attempt <= attempts )); do
-    if curl -fsI -L "$url" >/dev/null 2>&1; then
-      return 0
+    local bust_url
+    bust_url="$(add_cache_bust "$latest_json_url")"
+    local current_json
+    current_json="$(curl -fsSL "$bust_url" 2>/dev/null || true)"
+
+    if [[ -n "$current_json" ]]; then
+      local current_date
+      current_date="$(printf '%s' "$current_json" | perl -MJSON::PP -e '
+        my $json = do { local $/; <STDIN> };
+        eval {
+          my $data = decode_json($json);
+          print $data->{date};
+        };
+      ')"
+      if [[ "$current_date" == "$expected_date" ]]; then
+        printf "Deployment confirmed (date: %s).\n" "$current_date" >&2
+        return 0
+      fi
+      printf "Current deployment date: %s (attempt %d/%d)\n" "${current_date:-unknown}" "$attempt" "$attempts" >&2
+    else
+      printf "Failed to fetch latest.json (attempt %d/%d)\n" "$attempt" "$attempts" >&2
     fi
 
     if (( attempt < attempts )); then
@@ -159,6 +230,32 @@ wait_for_http_ok() {
 extract_source_url() {
   local log_file="$1"
   perl -ne 'if (/^Source image URL: (.+)$/) { $last = $1 } END { print $last if defined $last }' "$log_file"
+}
+
+copy_menu_image_if_present() {
+  local source_file="$1"
+  local target_file="$2"
+  local label="$3"
+
+  if [[ -f "$source_file" ]]; then
+    cp "$source_file" "$target_file"
+    return 0
+  fi
+
+  printf 'No menu image for %s; removing old asset and publishing placeholder state.\n' "$label" >&2
+  rm -f "$target_file"
+  return 1
+}
+
+published_image_json() {
+  local source_file="$1"
+  local published_path="$2"
+
+  if [[ -f "$source_file" ]]; then
+    json_escape "$published_path"
+  else
+    printf 'null'
+  fi
 }
 
 build_combined_menu_board() {
@@ -186,12 +283,19 @@ build_combined_menu_board() {
 publish_web_assets() {
   mkdir -p "$docs_images_dir" "$docs_data_dir"
 
-  cp "$theeats_file" "${docs_images_dir}/theeatsfood.jpg"
-  cp "$hanshin_file" "${docs_images_dir}/hanshin-it-cafeteria.jpg"
-  cp "$foodfocus_file" "${docs_images_dir}/foodfocus.jpg"
-  cp "$onjeong_file" "${docs_images_dir}/onjeong-hansik-buffet.jpg"
-  cp "$yoonchef_kolon_file" "${docs_images_dir}/yoonchef-kolon.jpg"
-  cp "$byeoksan_theeroom_file" "${docs_images_dir}/byeoksan-theeroom.jpg"
+  copy_menu_image_if_present "$theeats_file" "${docs_images_dir}/theeatsfood.jpg" "더이츠푸드" || true
+  copy_menu_image_if_present "$hanshin_file" "${docs_images_dir}/hanshin-it-cafeteria.jpg" "한신 IT 카페테리아" || true
+  copy_menu_image_if_present "$foodfocus_file" "${docs_images_dir}/foodfocus.jpg" "푸드포커스" || true
+  copy_menu_image_if_present "$onjeong_file" "${docs_images_dir}/onjeong-hansik-buffet.jpg" "온정 한식 뷔페" || true
+  copy_menu_image_if_present "$yoonchef_kolon_file" "${docs_images_dir}/yoonchef-kolon.jpg" "윤쉐프 코오롱" || true
+  copy_menu_image_if_present "$byeoksan_theeroom_file" "${docs_images_dir}/byeoksan-theeroom.jpg" "벽산더이룸" || true
+
+  theeats_image_json="$(published_image_json "$theeats_file" "./images/theeatsfood.jpg")"
+  hanshin_image_json="$(published_image_json "$hanshin_file" "./images/hanshin-it-cafeteria.jpg")"
+  foodfocus_image_json="$(published_image_json "$foodfocus_file" "./images/foodfocus.jpg")"
+  onjeong_image_json="$(published_image_json "$onjeong_file" "./images/onjeong-hansik-buffet.jpg")"
+  yoonchef_kolon_image_json="$(published_image_json "$yoonchef_kolon_file" "./images/yoonchef-kolon.jpg")"
+  byeoksan_theeroom_image_json="$(published_image_json "$byeoksan_theeroom_file" "./images/byeoksan-theeroom.jpg")"
 
   build_combined_menu_board
 
@@ -207,7 +311,7 @@ publish_web_assets() {
       "displayName": "더이츠푸드",
       "sourcePage": "https://pf.kakao.com/_xeVwxnn",
       "sourceImage": ${theeats_url_json},
-      "image": "./images/theeatsfood.jpg",
+      "image": ${theeats_image_json},
       "naverMap": "https://map.naver.com/v5/search/더이츠푸드",
       "lat": 37.4849,
       "lng": 126.8958
@@ -218,7 +322,7 @@ publish_web_assets() {
       "displayName": "한신IT 구내식당",
       "sourcePage": "https://pf.kakao.com/_QRALxb",
       "sourceImage": ${hanshin_url_json},
-      "image": "./images/hanshin-it-cafeteria.jpg",
+      "image": ${hanshin_image_json},
       "naverMap": "https://map.naver.com/v5/search/한신IT구내식당",
       "lat": 37.4837,
       "lng": 126.8955
@@ -229,7 +333,7 @@ publish_web_assets() {
       "displayName": "푸드포커스",
       "sourcePage": "https://pf.kakao.com/_uxfhjG/113021355",
       "sourceImage": ${foodfocus_url_json},
-      "image": "./images/foodfocus.jpg",
+      "image": ${foodfocus_image_json},
       "naverMap": "https://map.naver.com/v5/search/푸드포커스",
       "lat": 37.4843,
       "lng": 126.8963
@@ -240,7 +344,7 @@ publish_web_assets() {
       "displayName": "온정 한식 뷔페",
       "sourcePage": "https://pf.kakao.com/_BdwNn/posts",
       "sourceImage": ${onjeong_url_json},
-      "image": "./images/onjeong-hansik-buffet.jpg",
+      "image": ${onjeong_image_json},
       "naverMap": "https://map.naver.com/v5/search/온정한식뷔페",
       "lat": 37.4850,
       "lng": 126.8970
@@ -251,7 +355,7 @@ publish_web_assets() {
       "displayName": "윤쉐프 코오롱",
       "sourcePage": "https://pf.kakao.com/_Xxhxkhs",
       "sourceImage": ${yoonchef_kolon_url_json},
-      "image": "./images/yoonchef-kolon.jpg",
+      "image": ${yoonchef_kolon_image_json},
       "naverMap": "https://map.naver.com/v5/search/윤쉐프코오롱",
       "lat": 37.4853,
       "lng": 126.8931
@@ -262,7 +366,7 @@ publish_web_assets() {
       "displayName": "벽산더이룸",
       "sourcePage": "https://pf.kakao.com/_xdLzxgG",
       "sourceImage": ${byeoksan_theeroom_url_json},
-      "image": "./images/byeoksan-theeroom.jpg",
+      "image": ${byeoksan_theeroom_image_json},
       "naverMap": "https://map.naver.com/v5/search/벽산더이룸",
       "lat": 37.4856,
       "lng": 126.8942
@@ -298,8 +402,29 @@ run_download() {
   local label="$3"
   local log_file="$4"
   local css_selector="${5:-}"
+  local previous_url="${6:-}"
 
-  SKIP_TEAMS_WEBHOOK=1 "$download_script" "$channel_url" "$output_file" "$label" "$css_selector" | tee "$log_file"
+  PREVIOUS_URL="$previous_url" SKIP_TEAMS_WEBHOOK=1 "$download_script" "$channel_url" "$output_file" "$label" "$css_selector" | tee "$log_file"
+}
+
+download_menu_if_available() {
+  local channel_url="$1"
+  local output_file="$2"
+  local label="$3"
+  local log_file="$4"
+  local css_selector="${5:-}"
+  local id="$6"
+
+  local prev_url
+  prev_url="$(get_previous_source_image "$id")"
+
+  if run_download "$channel_url" "$output_file" "$label" "$log_file" "$css_selector" "$prev_url"; then
+    return 0
+  fi
+
+  rm -f "$output_file"
+  printf 'Menu image unavailable or not updated for %s; continuing with a placeholder.\n' "$label" >&2
+  return 1
 }
 
 theeats_file="${work_dir}/${default_date}-theeatsfood.jpg"
@@ -318,12 +443,12 @@ byeoksan_theeroom_log="${work_dir}/byeoksan-theeroom.log"
 
 cd "$script_dir"
 
-run_download "https://pf.kakao.com/_xeVwxnn" "$theeats_file" "TheEatsFood" "$theeats_log"
-run_download "https://pf.kakao.com/_QRALxb" "$hanshin_file" "HanshinITCafeteria" "$hanshin_log"
-run_download "https://pf.kakao.com/_uxfhjG/113021355" "$foodfocus_file" "FoodFocus" "$foodfocus_log"
-run_download "https://pf.kakao.com/_BdwNn/posts" "$onjeong_file" "온정한식뷔페" "$onjeong_log" "#mArticle > div.wrap_webview > div:nth-child(2) > div.wrap_archive_content > div > div > a > div"
-run_download "https://pf.kakao.com/_Xxhxkhs" "$yoonchef_kolon_file" "윤쉐프코오롱" "$yoonchef_kolon_log" "#mArticle > div.wrap_webview > div.area_card.card_profile > div > div.item_profile_head > button > span > img"
-run_download "https://pf.kakao.com/_xdLzxgG" "$byeoksan_theeroom_file" "벽산더이룸" "$byeoksan_theeroom_log" "#mArticle > div.wrap_webview > div.area_card.card_profile > div > div.item_profile_head > button > span > img"
+download_menu_if_available "https://pf.kakao.com/_xeVwxnn" "$theeats_file" "TheEatsFood" "$theeats_log" "" "theeatsfood" || true
+download_menu_if_available "https://pf.kakao.com/_QRALxb" "$hanshin_file" "HanshinITCafeteria" "$hanshin_log" "" "hanshin-it-cafeteria" || true
+download_menu_if_available "https://pf.kakao.com/_uxfhjG/113021355" "$foodfocus_file" "FoodFocus" "$foodfocus_log" "" "foodfocus" || true
+download_menu_if_available "https://pf.kakao.com/_BdwNn/posts" "$onjeong_file" "온정한식뷔페" "$onjeong_log" "#mArticle > div.wrap_webview > div:nth-child(2) > div.wrap_archive_content > div > div > a > div" "onjeong-hansik-buffet" || true
+download_menu_if_available "https://pf.kakao.com/_Xxhxkhs" "$yoonchef_kolon_file" "윤쉐프코오롱" "$yoonchef_kolon_log" "#mArticle > div.wrap_webview > div.area_card.card_profile > div > div.item_profile_head > button > span > img" "yoonchef-kolon" || true
+download_menu_if_available "https://pf.kakao.com/_xdLzxgG" "$byeoksan_theeroom_file" "벽산더이룸" "$byeoksan_theeroom_log" "#mArticle > div.wrap_webview > div.area_card.card_profile > div > div.item_profile_head > button > span > img" "byeoksan-theeroom" || true
 
 theeats_url="$(extract_source_url "$theeats_log")"
 hanshin_url="$(extract_source_url "$hanshin_log")"
@@ -332,17 +457,12 @@ onjeong_url="$(extract_source_url "$onjeong_log")"
 yoonchef_kolon_url="$(extract_source_url "$yoonchef_kolon_log")"
 byeoksan_theeroom_url="$(extract_source_url "$byeoksan_theeroom_log")"
 
-if [[ -z "$theeats_url" || -z "$hanshin_url" || -z "$foodfocus_url" || -z "$onjeong_url" || -z "$yoonchef_kolon_url" || -z "$byeoksan_theeroom_url" ]]; then
-  echo "Failed to extract one or more image URLs from download logs." >&2
-  exit 1
-fi
-
-theeats_url_json="$(json_escape "$theeats_url")"
-hanshin_url_json="$(json_escape "$hanshin_url")"
-foodfocus_url_json="$(json_escape "$foodfocus_url")"
-onjeong_url_json="$(json_escape "$onjeong_url")"
-yoonchef_kolon_url_json="$(json_escape "$yoonchef_kolon_url")"
-byeoksan_theeroom_url_json="$(json_escape "$byeoksan_theeroom_url")"
+theeats_url_json="$(json_or_null "$theeats_url")"
+hanshin_url_json="$(json_or_null "$hanshin_url")"
+foodfocus_url_json="$(json_or_null "$foodfocus_url")"
+onjeong_url_json="$(json_or_null "$onjeong_url")"
+yoonchef_kolon_url_json="$(json_or_null "$yoonchef_kolon_url")"
+byeoksan_theeroom_url_json="$(json_or_null "$byeoksan_theeroom_url")"
 
 publish_web_assets
 
@@ -358,13 +478,14 @@ if ! has_valid_teams_webhook_url "$teams_webhook_url"; then
   exit 0
 fi
 
-menu_board_url="$(resolve_published_menu_board_url)"
-if ! wait_for_http_ok "$menu_board_url"; then
-  echo "Published menu board URL is not reachable yet: $menu_board_url" >&2
+published_site_url="$(resolve_published_site_url)"
+
+if ! wait_for_deployment "$published_site_url" "$default_date"; then
+  echo "Deployment to GitHub Pages did not complete within the timeout." >&2
   exit 1
 fi
 
-published_site_url="$(resolve_published_site_url)"
+menu_board_url="$(resolve_published_menu_board_url)"
 menu_board_url="$(add_cache_bust "$menu_board_url")"
 
 payload_file="${work_dir}/teams-payload.json"

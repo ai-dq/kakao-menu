@@ -136,6 +136,11 @@ fi
 
 image_url="${image_url/http:\/\//https://}"
 
+if [[ -n "${PREVIOUS_URL:-}" && "$image_url" == "$PREVIOUS_URL" ]]; then
+  echo "Image URL matches the previous one; menu likely not updated yet." >&2
+  exit 1
+fi
+
 candidate_urls=("$image_url")
 
 if [[ "$image_url" =~ /img_[a-z]+\.jpg$ ]]; then
