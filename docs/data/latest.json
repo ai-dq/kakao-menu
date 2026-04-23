@@ -1,6 +1,6 @@
 {
   "date": "2026-04-23",
-  "updatedAt": "2026-04-23T04:20:22+00:00",
+  "updatedAt": "2026-04-23T23:58:30+00:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -8,7 +8,7 @@
       "name": "TheEatsFood",
       "displayName": "더이츠푸드",
       "sourcePage": "https://pf.kakao.com/_xeVwxnn",
-      "sourceImage": "https://k.kakaocdn.net/dn/bNVwoB/dJMcafGmp5l/XA1AHoqtKTorqZukTW4cTK/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/t6xEu/dJMcaduV6kw/U9OVXWg6m6JSnlKCFrzJ9K/img_xl.jpg",
       "image": "./images/theeatsfood.jpg",
       "naverMap": "https://map.naver.com/v5/search/더이츠푸드",
       "lat": 37.4849,
@@ -19,7 +19,7 @@
       "name": "Hanshin IT Cafeteria",
       "displayName": "한신IT 구내식당",
       "sourcePage": "https://pf.kakao.com/_QRALxb",
-      "sourceImage": "https://k.kakaocdn.net/dn/BNTDp/dJMcacpj8dN/ixjjX4vg0YL3473KQdSNb0/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/cNMfhJ/dJMcabYgpLU/gJBnSycyiLP6Z8g29P4e3k/img_xl.jpg",
       "image": "./images/hanshin-it-cafeteria.jpg",
       "naverMap": "https://map.naver.com/v5/search/한신IT구내식당",
       "lat": 37.4837,
@@ -41,7 +41,7 @@
       "name": "온정 한식 뷔페",
       "displayName": "온정 한식 뷔페",
       "sourcePage": "https://pf.kakao.com/_BdwNn/posts",
-      "sourceImage": "https://k.kakaocdn.net/dn/kbFkC/dJMcaib1kIp/QOhd19baCJDKT7T7VTQXc1/img.png",
+      "sourceImage": "https://k.kakaocdn.net/dn/x5yEZ/dJMcag6kUov/o20dAzIkCG2Xw8nKI0qm70/img.png",
       "image": "./images/onjeong-hansik-buffet.jpg",
       "naverMap": "https://map.naver.com/v5/search/온정한식뷔페",
       "lat": 37.4850,
