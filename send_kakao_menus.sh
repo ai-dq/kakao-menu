@@ -491,7 +491,7 @@ menu_board_url="$(add_cache_bust "$menu_board_url")"
 payload_file="${work_dir}/teams-payload.json"
 
 cat > "$payload_file" <<EOF
-{"type":"message","attachments":[{"contentType":"application/vnd.microsoft.card.adaptive","content":{"\$schema":"http://adaptivecards.io/schemas/adaptive-card.json","type":"AdaptiveCard","version":"1.4","body":[{"type":"TextBlock","text":$(json_escape "${default_date} cafeteria menu board"),"wrap":true,"weight":"Bolder"},{"type":"Image","url":$(json_escape "$menu_board_url"),"size":"Stretch"},{"type":"TextBlock","text":$(json_escape "$published_site_url"),"wrap":true,"isSubtle":true,"spacing":"Small"}]}}]}
+{"type":"message","attachments":[{"contentType":"application/vnd.microsoft.card.adaptive","content":{"\$schema":"http://adaptivecards.io/schemas/adaptive-card.json","type":"AdaptiveCard","version":"1.4","body":[{"type":"TextBlock","text":$(json_escape "${default_date} cafeteria menu board"),"wrap":true,"weight":"Bolder"},{"type":"Image","url":$(json_escape "$menu_board_url"),"size":"Stretch"},{"type":"TextBlock","text":$(json_escape "[Open menu board](${published_site_url})"),"wrap":true,"isSubtle":true,"spacing":"Small"}]}}]}
 EOF
 
 curl -fsSL -X POST \
