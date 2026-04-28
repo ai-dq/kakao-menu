@@ -186,8 +186,9 @@ add_cache_bust() {
 wait_for_deployment() {
   local site_url="$1"
   local expected_date="$2"
-  local attempts="${3:-30}"
-  local sleep_seconds="${4:-10}"
+  local expected_updated_at="${3:-}"
+  local attempts="${4:-30}"
+  local sleep_seconds="${5:-10}"
   local attempt=1
   local latest_json_url="${site_url%/}/data/latest.json"
 
@@ -208,13 +209,59 @@ wait_for_deployment() {
           print $data->{date};
         };
       ')"
-      if [[ "$current_date" == "$expected_date" ]]; then
-        printf "Deployment confirmed (date: %s).\n" "$current_date" >&2
+      local current_updated_at
+      current_updated_at="$(printf '%s' "$current_json" | perl -MJSON::PP -e '
+        my $json = do { local $/; <STDIN> };
+        eval {
+          my $data = decode_json($json);
+          print $data->{updatedAt};
+        };
+      ')"
+      if [[ "$current_date" == "$expected_date" && ( -z "$expected_updated_at" || "$current_updated_at" == "$expected_updated_at" ) ]]; then
+        printf "Deployment confirmed (date: %s, updatedAt: %s).\n" "$current_date" "${current_updated_at:-unknown}" >&2
         return 0
       fi
-      printf "Current deployment date: %s (attempt %d/%d)\n" "${current_date:-unknown}" "$attempt" "$attempts" >&2
+      printf "Current deployment date: %s, updatedAt: %s (attempt %d/%d)\n" "${current_date:-unknown}" "${current_updated_at:-unknown}" "$attempt" "$attempts" >&2
     else
       printf "Failed to fetch latest.json (attempt %d/%d)\n" "$attempt" "$attempts" >&2
+    fi
+
+    if (( attempt < attempts )); then
+      sleep "$sleep_seconds"
+    fi
+
+    (( attempt += 1 ))
+  done
+
+  return 1
+}
+
+wait_for_published_image() {
+  local image_url="$1"
+  local local_image="$2"
+  local attempts="${3:-30}"
+  local sleep_seconds="${4:-10}"
+  local attempt=1
+  local expected_sha
+
+  expected_sha="$(sha256sum "$local_image" | awk '{print $1}')"
+  printf "Waiting for published image to match %s...\n" "$image_url" >&2
+
+  while (( attempt <= attempts )); do
+    local bust_url
+    local downloaded_image="${work_dir}/published-menu-board-${attempt}.jpg"
+    bust_url="$(add_cache_bust "$image_url")"
+
+    if curl -fsSL "$bust_url" -o "$downloaded_image" 2>/dev/null; then
+      local current_sha
+      current_sha="$(sha256sum "$downloaded_image" | awk '{print $1}')"
+      if [[ "$current_sha" == "$expected_sha" ]]; then
+        printf "Published image confirmed (sha256: %s).\n" "$current_sha" >&2
+        return 0
+      fi
+      printf "Published image SHA mismatch (attempt %d/%d).\n" "$attempt" "$attempts" >&2
+    else
+      printf "Failed to fetch published image (attempt %d/%d)\n" "$attempt" "$attempts" >&2
     fi
 
     if (( attempt < attempts )); then
@@ -479,13 +526,24 @@ if ! has_valid_teams_webhook_url "$teams_webhook_url"; then
 fi
 
 published_site_url="$(resolve_published_site_url)"
+expected_updated_at="$(perl -MJSON::PP -e '
+  my $json = do { local $/; <STDIN> };
+  my $data = decode_json($json);
+  print $data->{updatedAt};
+' < "${docs_data_dir}/latest.json")"
 
-if ! wait_for_deployment "$published_site_url" "$default_date"; then
+if ! wait_for_deployment "$published_site_url" "$default_date" "$expected_updated_at"; then
   echo "Deployment to GitHub Pages did not complete within the timeout." >&2
   exit 1
 fi
 
 menu_board_url="$(resolve_published_menu_board_url)"
+
+if ! wait_for_published_image "$menu_board_url" "${docs_images_dir}/menu-board.jpg"; then
+  echo "Published menu board image did not match the local generated image within the timeout." >&2
+  exit 1
+fi
+
 menu_board_url="$(add_cache_bust "$menu_board_url")"
 
 payload_file="${work_dir}/teams-payload.json"
