@@ -378,7 +378,7 @@ publish_web_assets() {
       "id": "foodfocus",
       "name": "FoodFocus",
       "displayName": "푸드포커스",
-      "sourcePage": "https://pf.kakao.com/_uxfhjG/113021355",
+      "sourcePage": "https://pf.kakao.com/_uxfhjG/posts",
       "sourceImage": ${foodfocus_url_json},
       "image": ${foodfocus_image_json},
       "naverMap": "https://map.naver.com/v5/search/푸드포커스",
@@ -492,7 +492,7 @@ cd "$script_dir"
 
 download_menu_if_available "https://pf.kakao.com/_xeVwxnn" "$theeats_file" "TheEatsFood" "$theeats_log" "" "theeatsfood" || true
 download_menu_if_available "https://pf.kakao.com/_QRALxb" "$hanshin_file" "HanshinITCafeteria" "$hanshin_log" "" "hanshin-it-cafeteria" || true
-download_menu_if_available "https://pf.kakao.com/_uxfhjG/113021355" "$foodfocus_file" "FoodFocus" "$foodfocus_log" "" "foodfocus" || true
+download_menu_if_available "https://pf.kakao.com/_uxfhjG/posts" "$foodfocus_file" "FoodFocus" "$foodfocus_log" ".wrap_archive_content .wrap_fit_thumb" "foodfocus" || true
 download_menu_if_available "https://pf.kakao.com/_BdwNn/posts" "$onjeong_file" "온정한식뷔페" "$onjeong_log" "#mArticle > div.wrap_webview > div:nth-child(2) > div.wrap_archive_content > div > div > a > div" "onjeong-hansik-buffet" || true
 download_menu_if_available "https://pf.kakao.com/_Xxhxkhs" "$yoonchef_kolon_file" "윤쉐프코오롱" "$yoonchef_kolon_log" "#mArticle > div.wrap_webview > div.area_card.card_profile > div > div.item_profile_head > button > span > img" "yoonchef-kolon" || true
 download_menu_if_available "https://pf.kakao.com/_xdLzxgG" "$byeoksan_theeroom_file" "벽산더이룸" "$byeoksan_theeroom_log" "#mArticle > div.wrap_webview > div.area_card.card_profile > div > div.item_profile_head > button > span > img" "byeoksan-theeroom" || true
