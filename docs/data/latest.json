@@ -1,6 +1,6 @@
 {
   "date": "2026-04-29",
-  "updatedAt": "2026-04-29T10:00:17+09:00",
+  "updatedAt": "2026-04-29T10:15:57+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -29,9 +29,9 @@
       "id": "foodfocus",
       "name": "FoodFocus",
       "displayName": "푸드포커스",
-      "sourcePage": "https://pf.kakao.com/_uxfhjG/113021355",
-      "sourceImage": null,
-      "image": null,
+      "sourcePage": "https://pf.kakao.com/_uxfhjG/posts",
+      "sourceImage": "https://k.kakaocdn.net/dn/c9KHHL/dJMcacQsb0X/eXrcVxPSFPNEB5xzMkhGhk/img_xl.jpg",
+      "image": "./images/foodfocus.jpg",
       "naverMap": "https://map.naver.com/v5/search/푸드포커스",
       "lat": 37.4843,
       "lng": 126.8963
