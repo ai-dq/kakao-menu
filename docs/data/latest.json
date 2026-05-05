@@ -1,6 +1,6 @@
 {
   "date": "2026-05-05",
-  "updatedAt": "2026-05-05T08:00:21+09:00",
+  "updatedAt": "2026-05-05T10:00:24+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -30,8 +30,8 @@
       "name": "FoodFocus",
       "displayName": "푸드포커스",
       "sourcePage": "https://pf.kakao.com/_uxfhjG/posts",
-      "sourceImage": null,
-      "image": null,
+      "sourceImage": "https://k.kakaocdn.net/dn/bcmU8Z/dJMcahRNNL5/5p9yy4ry1ELdiATjkSknJk/img_xl.jpg",
+      "image": "./images/foodfocus.jpg",
       "naverMap": "https://map.naver.com/v5/search/푸드포커스",
       "lat": 37.4843,
       "lng": 126.8963
@@ -41,8 +41,8 @@
       "name": "온정 한식 뷔페",
       "displayName": "온정 한식 뷔페",
       "sourcePage": "https://pf.kakao.com/_BdwNn/posts",
-      "sourceImage": null,
-      "image": null,
+      "sourceImage": "https://k.kakaocdn.net/dn/Ij4Mx/dJMcaarEUR1/LEi3FuG1ZUYbkZRvuOUPIK/img_xl.jpg",
+      "image": "./images/onjeong-hansik-buffet.jpg",
       "naverMap": "https://map.naver.com/v5/search/온정한식뷔페",
       "lat": 37.4850,
       "lng": 126.8970
@@ -63,8 +63,8 @@
       "name": "벽산더이룸",
       "displayName": "벽산더이룸",
       "sourcePage": "https://pf.kakao.com/_xdLzxgG",
-      "sourceImage": null,
-      "image": null,
+      "sourceImage": "https://k.kakaocdn.net/dn/o8oh1/dJMcah5nii9/TCMoaSfwt17kWNUUuoNaik/img_xl.jpg",
+      "image": "./images/byeoksan-theeroom.jpg",
       "naverMap": "https://map.naver.com/v5/search/벽산더이룸",
       "lat": 37.4856,
       "lng": 126.8942
