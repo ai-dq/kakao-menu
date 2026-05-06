@@ -1,6 +1,6 @@
 {
   "date": "2026-05-06",
-  "updatedAt": "2026-05-06T08:00:38+09:00",
+  "updatedAt": "2026-05-06T10:00:28+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -52,8 +52,8 @@
       "name": "윤쉐프 코오롱",
       "displayName": "윤쉐프 코오롱",
       "sourcePage": "https://pf.kakao.com/_Xxhxkhs",
-      "sourceImage": null,
-      "image": null,
+      "sourceImage": "https://k.kakaocdn.net/dn/7J9ML/dJMcajovMRB/T4QCk7w5jIdAGKK3ABssk0/img_xl.jpg",
+      "image": "./images/yoonchef-kolon.jpg",
       "naverMap": "https://map.naver.com/v5/search/윤쉐프코오롱",
       "lat": 37.4853,
       "lng": 126.8931
@@ -63,7 +63,7 @@
       "name": "벽산더이룸",
       "displayName": "벽산더이룸",
       "sourcePage": "https://pf.kakao.com/_xdLzxgG",
-      "sourceImage": "https://k.kakaocdn.net/dn/o8oh1/dJMcah5nii9/TCMoaSfwt17kWNUUuoNaik/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/mTeN8/dJMcadPnL7F/LoL1P4LTeaWNQEKEkNGEYK/img_xl.jpg",
       "image": "./images/byeoksan-theeroom.jpg",
       "naverMap": "https://map.naver.com/v5/search/벽산더이룸",
       "lat": 37.4856,
