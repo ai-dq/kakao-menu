@@ -1,6 +1,6 @@
 {
-  "date": "2026-05-25",
-  "updatedAt": "2026-05-25T10:00:17+09:00",
+  "date": "2026-05-26",
+  "updatedAt": "2026-05-26T08:00:16+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -8,7 +8,7 @@
       "name": "TheEatsFood",
       "displayName": "더이츠푸드",
       "sourcePage": "https://pf.kakao.com/_xeVwxnn",
-      "sourceImage": "https://k.kakaocdn.net/dn/kaPcj/dJMcadINhQr/dSA6L4arWsNSSYn0cIPdfK/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/dqZScH/dJMcahR2Vhv/xlhGuVntJXlJr3t6tXWhOK/img_xl.jpg",
       "image": "./images/theeatsfood.jpg",
       "naverMap": "https://map.naver.com/v5/search/더이츠푸드",
       "lat": 37.4849,
@@ -19,7 +19,7 @@
       "name": "Hanshin IT Cafeteria",
       "displayName": "한신IT 구내식당",
       "sourcePage": "https://pf.kakao.com/_QRALxb",
-      "sourceImage": "https://k.kakaocdn.net/dn/EmG0Q/dJMcaaSWr5I/28SwKGEK0KpE4UI9p56RN1/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/bv2Bem/dJMcaaSX61w/hhBEpV0BCFd0aWdM4wM5R0/img_xl.jpg",
       "image": "./images/hanshin-it-cafeteria.jpg",
       "naverMap": "https://map.naver.com/v5/search/한신IT구내식당",
       "lat": 37.4837,
@@ -30,7 +30,7 @@
       "name": "FoodFocus",
       "displayName": "푸드포커스",
       "sourcePage": "https://pf.kakao.com/_uxfhjG/posts",
-      "sourceImage": "https://k.kakaocdn.net/dn/ytbCq/dJMcabK7iQq/2uPvaNuCfauOfNWq5iPr1k/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/cibuwS/dJMcai4spdB/RGYCXaY551NIxl4uAxyTCK/img_xl.jpg",
       "image": "./images/foodfocus.jpg",
       "naverMap": "https://map.naver.com/v5/search/푸드포커스",
       "lat": 37.4843,
@@ -52,8 +52,8 @@
       "name": "윤쉐프 코오롱",
       "displayName": "윤쉐프 코오롱",
       "sourcePage": "https://pf.kakao.com/_Xxhxkhs",
-      "sourceImage": "https://k.kakaocdn.net/dn/lt7c4/dJMcafUf0yS/PDC6SKgV06TO5QwmJfkj5K/img_xl.jpg",
-      "image": "./images/yoonchef-kolon.jpg",
+      "sourceImage": null,
+      "image": null,
       "naverMap": "https://map.naver.com/v5/search/윤쉐프코오롱",
       "lat": 37.4853,
       "lng": 126.8931
@@ -63,8 +63,8 @@
       "name": "벽산더이룸",
       "displayName": "벽산더이룸",
       "sourcePage": "https://pf.kakao.com/_xdLzxgG",
-      "sourceImage": "https://k.kakaocdn.net/dn/b7JMzB/dJMcaiDpHy3/1BWZK1d137efJ6vRkePFqk/img_xl.jpg",
-      "image": "./images/byeoksan-theeroom.jpg",
+      "sourceImage": null,
+      "image": null,
       "naverMap": "https://map.naver.com/v5/search/벽산더이룸",
       "lat": 37.4856,
       "lng": 126.8942
