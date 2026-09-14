@@ -156,7 +156,12 @@ async function loadBoard() {
       title.textContent = menu.displayName || menu.name;
       kicker.textContent = hasImage ? "Menu Source" : "Menu Pending";
       frame.dataset.hasImage = hasImage ? "true" : "false";
-      sourceLink.href = menu.sourcePage;
+      sourceLink.href = menu.sourcePost || menu.sourcePage;
+      sourceLink.querySelector(".source-label").textContent = menu.sourceLabel || "카카오 채널";
+      if (menu.sourcePostedAt) {
+        const postedAt = new Date(menu.sourcePostedAt);
+        kicker.textContent = `게시일 ${postedAt.toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" })}`;
+      }
       if (menu.naverMap) {
         naverLink.href = menu.naverMap;
       } else {
@@ -174,7 +179,7 @@ async function loadBoard() {
         placeholder.className = "image-placeholder";
         placeholder.innerHTML = `
           <span class="image-placeholder-badge">메뉴 미등록</span>
-          <p class="image-placeholder-copy">카카오 채널에 아직 메뉴 이미지가 올라오지 않았습니다.</p>
+          <p class="image-placeholder-copy">메뉴 이미지를 불러올 수 없습니다. 원본 채널에서 확인해 주세요.</p>
         `;
         frame.appendChild(placeholder);
       }
