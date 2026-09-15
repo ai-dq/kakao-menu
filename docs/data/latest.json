@@ -1,6 +1,6 @@
 {
   "date": "2026-09-15",
-  "updatedAt": "2026-09-15T08:00:22+09:00",
+  "updatedAt": "2026-09-15T10:00:21+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -19,7 +19,7 @@
       "name": "Hanshin IT Cafeteria",
       "displayName": "한신IT 구내식당",
       "sourcePage": "https://pf.kakao.com/_QRALxb",
-      "sourceImage": "https://k.kakaocdn.net/dn/cHbJ3b/dJMcabTbLKH/JeJn6jmYf5IWPsnrYELpq0/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/SHEk8/dJMcaafL8T5/Mr7ATAJEKMPN0LcVvk63x0/img_xl.jpg",
       "image": "./images/hanshin-it-cafeteria.jpg",
       "naverMap": "https://map.naver.com/v5/search/한신IT구내식당",
       "lat": 37.4837,
@@ -52,8 +52,8 @@
       "name": "윤쉐프 코오롱",
       "displayName": "윤쉐프 코오롱",
       "sourcePage": "https://pf.kakao.com/_Xxhxkhs",
-      "sourceImage": null,
-      "image": null,
+      "sourceImage": "https://k.kakaocdn.net/dn/dXnlgC/dJMcaiEQOTw/uKCldIJmOywQ2mhFtuKLZK/img_xl.jpg",
+      "image": "./images/yoonchef-kolon.jpg",
       "naverMap": "https://map.naver.com/v5/search/윤쉐프코오롱",
       "lat": 37.4853,
       "lng": 126.8931
@@ -63,8 +63,8 @@
       "name": "벽산더이룸",
       "displayName": "벽산더이룸",
       "sourcePage": "https://pf.kakao.com/_xdLzxgG",
-      "sourceImage": null,
-      "image": null,
+      "sourceImage": "https://k.kakaocdn.net/dn/bpbqtG/dJMcafVHftA/K5wR3eEqZbdJ83BBlgOydk/img_xl.jpg",
+      "image": "./images/byeoksan-theeroom.jpg",
       "naverMap": "https://map.naver.com/v5/search/벽산더이룸",
       "lat": 37.4856,
       "lng": 126.8942
