@@ -4,11 +4,13 @@ set -euo pipefail
 
 export LANG="${LANG:-C.UTF-8}"
 export LC_ALL="${LC_ALL:-C.UTF-8}"
+export UV_CACHE_DIR="${UV_CACHE_DIR:-/data/.sh_cache/uv}"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 download_script="${script_dir}/download_kakao_profile.sh"
 compose_script="${script_dir}/compose_menu_board.py"
 teams_webhook_url="${TEAMS_WEBHOOK_URL:-}"
+github_account="${GITHUB_ACCOUNT:-seunghyuk-DQ}"
 default_date="$(date +%F)"
 docs_dir="${script_dir}/docs"
 docs_images_dir="${docs_dir}/images"
@@ -324,7 +326,9 @@ build_combined_menu_board() {
     "윤쉐프 코오롱" \
     "$yoonchef_kolon_file" \
     "벽산더이룸" \
-    "$byeoksan_theeroom_file" >/dev/null
+    "$byeoksan_theeroom_file" \
+    "kjfo_od (인스타그램)" \
+    "$kjfood_file" >/dev/null
 }
 
 publish_web_assets() {
@@ -343,6 +347,9 @@ publish_web_assets() {
   onjeong_image_json="$(published_image_json "$onjeong_file" "./images/onjeong-hansik-buffet.jpg")"
   yoonchef_kolon_image_json="$(published_image_json "$yoonchef_kolon_file" "./images/yoonchef-kolon.jpg")"
   byeoksan_theeroom_image_json="$(published_image_json "$byeoksan_theeroom_file" "./images/byeoksan-theeroom.jpg")"
+
+  copy_menu_image_if_present "$kjfood_file" "${docs_images_dir}/kjfood.jpg" "kjfo_od" || true
+  kjfood_image_json="$(published_image_json "$kjfood_file" "./images/kjfood.jpg")"
 
   build_combined_menu_board
 
@@ -389,7 +396,7 @@ publish_web_assets() {
       "id": "onjeong-hansik-buffet",
       "name": "온정 한식 뷔페",
       "displayName": "온정 한식 뷔페",
-      "sourcePage": "https://pf.kakao.com/_BdwNn/posts",
+      "sourcePage": "https://pf.kakao.com/_BdwNn/110559051",
       "sourceImage": ${onjeong_url_json},
       "image": ${onjeong_image_json},
       "naverMap": "https://map.naver.com/v5/search/온정한식뷔페",
@@ -417,10 +424,64 @@ publish_web_assets() {
       "naverMap": "https://map.naver.com/v5/search/벽산더이룸",
       "lat": 37.4856,
       "lng": 126.8942
+    },
+    {
+      "id": "kjfood",
+      "name": "kjfo_od",
+      "displayName": "kjfo_od (인스타그램)",
+      "sourceLabel": "인스타그램",
+      "sourcePage": "https://www.instagram.com/kjfo_od/",
+      "sourceImage": ${kjfood_url_json},
+      "sourcePost": ${kjfood_post_json},
+      "sourcePostedAt": ${kjfood_posted_at_json},
+      "image": ${kjfood_image_json}
     }
   ]
 }
 EOF
+}
+
+ensure_github_account() {
+  local expected_account="$1"
+  local active_account=""
+
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "GitHub CLI (gh) is required to select ${expected_account} before publishing." >&2
+    return 1
+  fi
+
+  active_account="$(gh auth status \
+    --active \
+    --hostname github.com \
+    --json hosts \
+    --jq '.hosts."github.com"[] | select(.active and .state == "success") | .login' \
+    2>/dev/null || true)"
+
+  if [[ "$active_account" == "$expected_account" ]]; then
+    return
+  fi
+
+  if [[ -n "$active_account" ]]; then
+    printf 'Active GitHub account is %s; switching to %s.\n' "$active_account" "$expected_account" >&2
+  else
+    printf 'No usable active GitHub account detected; switching to %s.\n' "$expected_account" >&2
+  fi
+
+  gh auth switch --hostname github.com --user "$expected_account"
+
+  active_account="$(gh auth status \
+    --active \
+    --hostname github.com \
+    --json hosts \
+    --jq '.hosts."github.com"[] | select(.active and .state == "success") | .login' \
+    2>/dev/null || true)"
+
+  if [[ "$active_account" != "$expected_account" ]]; then
+    printf 'Failed to activate GitHub account %s.\n' "$expected_account" >&2
+    return 1
+  fi
+
+  printf 'GitHub account switched to %s.\n' "$expected_account" >&2
 }
 
 maybe_push_web_updates() {
@@ -436,6 +497,8 @@ maybe_push_web_updates() {
   if [[ -z "$(git -C "$script_dir" status --short -- docs)" ]]; then
     return
   fi
+
+  ensure_github_account "$github_account"
 
   git -C "$script_dir" add docs
   git -C "$script_dir" commit -m "Update menu site for ${default_date}" >/dev/null
@@ -474,6 +537,31 @@ download_menu_if_available() {
   return 1
 }
 
+download_instagram_menu_if_available() {
+  if timeout 180 uv run --with instaloader==4.15.3 --with pillow python \
+    "${script_dir}/download_instagram_menu.py" kjfo_od "$kjfood_file" "$kjfood_metadata"; then
+    return 0
+  fi
+  rm -f "$kjfood_file" "$kjfood_metadata"
+  printf 'Instagram menu unavailable for kjfo_od; continuing with a placeholder.\n' >&2
+  return 1
+}
+
+instagram_metadata_value() {
+  local key="$1"
+  if [[ ! -f "$kjfood_metadata" ]]; then
+    printf 'null'
+    return
+  fi
+  perl -MJSON::PP -e '
+    my $data = decode_json(do { local $/; <STDIN> });
+    print encode_json($data->{$ARGV[0]});
+  ' "$key" < "$kjfood_metadata"
+}
+
+kjfood_file="${work_dir}/${default_date}-kjfood.jpg"
+kjfood_metadata="${work_dir}/kjfood.json"
+
 theeats_file="${work_dir}/${default_date}-theeatsfood.jpg"
 hanshin_file="${work_dir}/${default_date}-hanshin-it-cafeteria.jpg"
 foodfocus_file="${work_dir}/${default_date}-foodfocus.jpg"
@@ -493,9 +581,14 @@ cd "$script_dir"
 download_menu_if_available "https://pf.kakao.com/_xeVwxnn" "$theeats_file" "TheEatsFood" "$theeats_log" "" "theeatsfood" || true
 download_menu_if_available "https://pf.kakao.com/_QRALxb" "$hanshin_file" "HanshinITCafeteria" "$hanshin_log" "" "hanshin-it-cafeteria" || true
 download_menu_if_available "https://pf.kakao.com/_uxfhjG/posts" "$foodfocus_file" "FoodFocus" "$foodfocus_log" ".wrap_archive_content .wrap_fit_thumb" "foodfocus" || true
-download_menu_if_available "https://pf.kakao.com/_BdwNn/posts" "$onjeong_file" "온정한식뷔페" "$onjeong_log" "#mArticle > div.wrap_webview > div:nth-child(2) > div.wrap_archive_content > div > div > a > div" "onjeong-hansik-buffet" || true
+download_menu_if_available "https://pf.kakao.com/_BdwNn/110559051" "$onjeong_file" "온정한식뷔페" "$onjeong_log" "" "onjeong-hansik-buffet" || true
 download_menu_if_available "https://pf.kakao.com/_Xxhxkhs" "$yoonchef_kolon_file" "윤쉐프코오롱" "$yoonchef_kolon_log" "#mArticle > div.wrap_webview > div.area_card.card_profile > div > div.item_profile_head > button > span > img" "yoonchef-kolon" || true
 download_menu_if_available "https://pf.kakao.com/_xdLzxgG" "$byeoksan_theeroom_file" "벽산더이룸" "$byeoksan_theeroom_log" "#mArticle > div.wrap_webview > div.area_card.card_profile > div > div.item_profile_head > button > span > img" "byeoksan-theeroom" || true
+
+download_instagram_menu_if_available || true
+kjfood_url_json="$(instagram_metadata_value sourceImage)"
+kjfood_post_json="$(instagram_metadata_value sourcePost)"
+kjfood_posted_at_json="$(instagram_metadata_value sourcePostedAt)"
 
 theeats_url="$(extract_source_url "$theeats_log")"
 hanshin_url="$(extract_source_url "$hanshin_log")"

@@ -104,7 +104,7 @@ def build_placeholder_image() -> Image.Image:
     title_y = PLACEHOLDER_HEIGHT / 2 - 108
     draw.text((title_x, title_y), title, fill=PLACEHOLDER_TITLE, font=title_font)
 
-    body = "카카오 채널에\n아직 메뉴 이미지가 없습니다."
+    body = "메뉴 이미지를\n불러올 수 없습니다."
     body_font = load_font(34)
     body_bbox = draw.multiline_textbbox((0, 0), body, font=body_font, spacing=14, align="center")
     body_x = (TILE_WIDTH - (body_bbox[2] - body_bbox[0])) / 2 - body_bbox[0]
