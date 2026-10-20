@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import datetime
 import io
 import itertools
 import json
@@ -15,7 +16,7 @@ import requests
 from PIL import Image
 
 
-def download_menu(username: str, output: Path) -> dict:
+def select_via_instaloader(username: str) -> tuple[list[str], str, str]:
     loader = instaloader.Instaloader(
         quiet=True, max_connection_attempts=1, request_timeout=20,
         iphone_support=False,
@@ -47,6 +48,51 @@ def download_menu(username: str, output: Path) -> dict:
     if selected_post is None:
         raise ValueError("No image posts found among the 12 most recent profile entries.")
 
+    return urls, selected_post.shortcode, selected_post.date_utc.isoformat() + "Z"
+
+
+def select_via_embed(username: str) -> tuple[list[str], str, str]:
+    """Login-free fallback: the public profile embed page lists recent posts."""
+    response = requests.get(
+        f"https://www.instagram.com/{username}/embed/",
+        headers={"User-Agent": "Mozilla/5.0"},
+        timeout=30,
+    )
+    response.raise_for_status()
+    marker = '"contextJSON":'
+    index = response.text.find(marker)
+    if index < 0:
+        raise ValueError("Embed page has no profile data.")
+    context_json, _ = json.JSONDecoder().raw_decode(response.text[index + len(marker):])
+    posts = json.loads(context_json)["context"].get("graphql_media") or []
+    nodes = sorted(
+        (post.get("shortcode_media", post) for post in posts),
+        key=lambda node: node.get("taken_at_timestamp", 0),
+        reverse=True,
+    )
+    for node in nodes:
+        children = [edge["node"] for edge in (node.get("edge_sidecar_to_children") or {}).get("edges", [])]
+        if children:
+            urls = [child["display_url"] for child in children if not child.get("is_video")]
+        elif not node.get("is_video"):
+            urls = [node["display_url"]]
+        else:
+            urls = []
+        if urls:
+            posted_at = datetime.datetime.fromtimestamp(
+                node["taken_at_timestamp"], datetime.timezone.utc
+            ).replace(tzinfo=None)
+            return urls, node["shortcode"], posted_at.isoformat() + "Z"
+    raise ValueError("No image posts found in the profile embed.")
+
+
+def download_menu(username: str, output: Path) -> dict:
+    try:
+        urls, shortcode, posted_at = select_via_instaloader(username)
+    except Exception as error:
+        print(f"Instaloader failed ({type(error).__name__}); trying public embed.", file=sys.stderr)
+        urls, shortcode, posted_at = select_via_embed(username)
+
     images = []
     for url in urls:
         response = requests.get(url, timeout=30)
@@ -73,8 +119,8 @@ def download_menu(username: str, output: Path) -> dict:
 
     return {
         "sourceImage": urls[0],
-        "sourcePost": f"https://www.instagram.com/p/{selected_post.shortcode}/",
-        "sourcePostedAt": selected_post.date_utc.isoformat() + "Z",
+        "sourcePost": f"https://www.instagram.com/p/{shortcode}/",
+        "sourcePostedAt": posted_at,
     }
 
 
