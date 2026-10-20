@@ -10,3 +10,11 @@
 !docs/images/*.png
 __pycache__
 .playwright-cli
+*.pyc
+.venv/
+venv/
+session-*
+.session-*
+.DS_Store
+.idea/
+.vscode/
