@@ -396,7 +396,7 @@ publish_web_assets() {
       "id": "onjeong-hansik-buffet",
       "name": "온정 한식 뷔페",
       "displayName": "온정 한식 뷔페",
-      "sourcePage": "https://pf.kakao.com/_BdwNn/110559051",
+      "sourcePage": "https://pf.kakao.com/_BdwNn",
       "sourceImage": ${onjeong_url_json},
       "image": ${onjeong_image_json},
       "naverMap": "https://map.naver.com/v5/search/온정한식뷔페",
@@ -581,7 +581,7 @@ cd "$script_dir"
 download_menu_if_available "https://pf.kakao.com/_xeVwxnn" "$theeats_file" "TheEatsFood" "$theeats_log" "" "theeatsfood" || true
 download_menu_if_available "https://pf.kakao.com/_QRALxb" "$hanshin_file" "HanshinITCafeteria" "$hanshin_log" "" "hanshin-it-cafeteria" || true
 download_menu_if_available "https://pf.kakao.com/_uxfhjG/posts" "$foodfocus_file" "FoodFocus" "$foodfocus_log" ".wrap_archive_content .wrap_fit_thumb" "foodfocus" || true
-download_menu_if_available "https://pf.kakao.com/_BdwNn/110559051" "$onjeong_file" "온정한식뷔페" "$onjeong_log" "" "onjeong-hansik-buffet" || true
+download_menu_if_available "https://pf.kakao.com/_BdwNn" "$onjeong_file" "온정한식뷔페" "$onjeong_log" "#mArticle > div.wrap_webview > div.area_card.card_profile > div > div.item_profile_head > button > span > img" "onjeong-hansik-buffet" || true
 download_menu_if_available "https://pf.kakao.com/_Xxhxkhs" "$yoonchef_kolon_file" "윤쉐프코오롱" "$yoonchef_kolon_log" "#mArticle > div.wrap_webview > div.area_card.card_profile > div > div.item_profile_head > button > span > img" "yoonchef-kolon" || true
 download_menu_if_available "https://pf.kakao.com/_xdLzxgG" "$byeoksan_theeroom_file" "벽산더이룸" "$byeoksan_theeroom_log" "#mArticle > div.wrap_webview > div.area_card.card_profile > div > div.item_profile_head > button > span > img" "byeoksan-theeroom" || true
 
