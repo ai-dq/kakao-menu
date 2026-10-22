@@ -1,6 +1,6 @@
 {
   "date": "2026-10-22",
-  "updatedAt": "2026-10-22T08:00:27+09:00",
+  "updatedAt": "2026-10-22T10:00:29+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -52,8 +52,8 @@
       "name": "윤쉐프 코오롱",
       "displayName": "윤쉐프 코오롱",
       "sourcePage": "https://pf.kakao.com/_Xxhxkhs",
-      "sourceImage": null,
-      "image": null,
+      "sourceImage": "https://k.kakaocdn.net/dn/VSBSl/dJMcafhvDWX/F1pKzA6blhZyMCigyfCVX1/img_xl.jpg",
+      "image": "./images/yoonchef-kolon.jpg",
       "naverMap": "https://map.naver.com/v5/search/윤쉐프코오롱",
       "lat": 37.4853,
       "lng": 126.8931
@@ -63,8 +63,8 @@
       "name": "벽산더이룸",
       "displayName": "벽산더이룸",
       "sourcePage": "https://pf.kakao.com/_xdLzxgG",
-      "sourceImage": null,
-      "image": null,
+      "sourceImage": "https://k.kakaocdn.net/dn/dFNLYY/dJMcairE3hw/OxBAoF6XjbdXypw4pffix1/img_xl.jpg",
+      "image": "./images/byeoksan-theeroom.jpg",
       "naverMap": "https://map.naver.com/v5/search/벽산더이룸",
       "lat": 37.4856,
       "lng": 126.8942
@@ -75,7 +75,7 @@
       "displayName": "kjfo_od (인스타그램)",
       "sourceLabel": "인스타그램",
       "sourcePage": "https://www.instagram.com/kjfo_od/",
-      "sourceImage": "https://scontent-icn2-1.cdninstagram.com/v/t51.82787-15/858088531_18104332289322426_3278631992311925757_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=106&ig_cache_key=NDAxMzEzMzI5OTY4OTcyNjE1Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA1Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=aOYPaL79l7gQ7kNvwH8tQ7a&_nc_oc=Adry4N1ugsErdo9XTrRXoKVhyOAWRwtpjK3gVdzRipsOESjD89g7rUSC3VkiioiHPW8&_nc_zt=23&_nc_ht=scontent-icn2-1.cdninstagram.com&_nc_gid=MU-0mg9Nhz5KqKR-86aGEw&_nc_ss=7960f&oh=00_AQObvi2EaDo7D0iHEJGbgtv5eTG_00t42LiIwgibeqHZOg&oe=6ADF321E",
+      "sourceImage": "https://scontent-icn2-1.cdninstagram.com/v/t51.82787-15/858088531_18104332289322426_3278631992311925757_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=106&ig_cache_key=NDAxMzEzMzI5OTY4OTcyNjE1Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA1Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=aOYPaL79l7gQ7kNvwH8tQ7a&_nc_oc=Adry4N1ugsErdo9XTrRXoKVhyOAWRwtpjK3gVdzRipsOESjD89g7rUSC3VkiioiHPW8&_nc_zt=23&_nc_ht=scontent-icn2-1.cdninstagram.com&_nc_gid=QMq78ucf4CpC-9Js1lUW_A&_nc_ss=7960f&oh=00_AQND0UvBC8DvQTmY103H1JYhHvBZy9CuYoLlGgu0MUG-gw&oe=6ADF321E",
       "sourcePost": "https://www.instagram.com/p/Dexg3k8TCDM/",
       "sourcePostedAt": "2026-10-21T22:46:41Z",
       "image": "./images/kjfood.jpg"
