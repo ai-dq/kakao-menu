@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-23",
-  "updatedAt": "2026-10-23T10:00:26+09:00",
+  "date": "2026-10-26",
+  "updatedAt": "2026-10-26T08:00:30+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -8,7 +8,7 @@
       "name": "TheEatsFood",
       "displayName": "더이츠푸드",
       "sourcePage": "https://pf.kakao.com/_xeVwxnn",
-      "sourceImage": "https://k.kakaocdn.net/dn/cRBSHJ/dJMcagHAZ5n/DBE4dsNV8QP8ZG3sBOm3Vk/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/9GXXd/dJMcairHtOJ/NMwaWF9rjk4fUX2XOBX4HK/img_xl.jpg",
       "image": "./images/theeatsfood.jpg",
       "naverMap": "https://map.naver.com/v5/search/더이츠푸드",
       "lat": 37.4849,
@@ -19,7 +19,7 @@
       "name": "Hanshin IT Cafeteria",
       "displayName": "한신IT 구내식당",
       "sourcePage": "https://pf.kakao.com/_QRALxb",
-      "sourceImage": "https://k.kakaocdn.net/dn/RJG4N/dJMcacyhN5c/BnZdzOchNQDckJdkhzRZEK/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/9DkyH/dJMcadDLHD9/PeDZyPOwQ2eO3KRaXPUFu1/img_xl.jpg",
       "image": "./images/hanshin-it-cafeteria.jpg",
       "naverMap": "https://map.naver.com/v5/search/한신IT구내식당",
       "lat": 37.4837,
@@ -30,7 +30,7 @@
       "name": "FoodFocus",
       "displayName": "푸드포커스",
       "sourcePage": "https://pf.kakao.com/_uxfhjG/posts",
-      "sourceImage": "https://k.kakaocdn.net/dn/brn4Yh/dJMcag8q5iZ/4h4KJOn7WbOKl3tXzkZN5K/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/dWgkkd/dJMcagOpgUH/xtIwYgXWYK94wY6JOzMKhk/img_xl.jpg",
       "image": "./images/foodfocus.jpg",
       "naverMap": "https://map.naver.com/v5/search/푸드포커스",
       "lat": 37.4843,
@@ -41,7 +41,7 @@
       "name": "온정 한식 뷔페",
       "displayName": "온정 한식 뷔페",
       "sourcePage": "https://pf.kakao.com/_BdwNn",
-      "sourceImage": "https://k.kakaocdn.net/dn/LVw9f/dJMcafBMWyX/aiXyz7tsTurwB2Vc4OCSkk/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/pu8xq/dJMcadDKLnk/PMBTNZVpbF0kfyAjD42Kf1/img_xl.jpg",
       "image": "./images/onjeong-hansik-buffet.jpg",
       "naverMap": "https://map.naver.com/v5/search/온정한식뷔페",
       "lat": 37.4850,
@@ -52,8 +52,8 @@
       "name": "윤쉐프 코오롱",
       "displayName": "윤쉐프 코오롱",
       "sourcePage": "https://pf.kakao.com/_Xxhxkhs",
-      "sourceImage": "https://k.kakaocdn.net/dn/1NWAW/dJMcagglBha/TGQRAwO5I3ckaSpVjmJ0h1/img_xl.jpg",
-      "image": "./images/yoonchef-kolon.jpg",
+      "sourceImage": null,
+      "image": null,
       "naverMap": "https://map.naver.com/v5/search/윤쉐프코오롱",
       "lat": 37.4853,
       "lng": 126.8931
@@ -63,8 +63,8 @@
       "name": "벽산더이룸",
       "displayName": "벽산더이룸",
       "sourcePage": "https://pf.kakao.com/_xdLzxgG",
-      "sourceImage": "https://k.kakaocdn.net/dn/bjbEcw/dJMcacZm5rQ/OTcVnaIPMrsrcIcOh00720/img_xl.jpg",
-      "image": "./images/byeoksan-theeroom.jpg",
+      "sourceImage": null,
+      "image": null,
       "naverMap": "https://map.naver.com/v5/search/벽산더이룸",
       "lat": 37.4856,
       "lng": 126.8942
@@ -75,9 +75,9 @@
       "displayName": "kjfo_od (인스타그램)",
       "sourceLabel": "인스타그램",
       "sourcePage": "https://www.instagram.com/kjfo_od/",
-      "sourceImage": "https://scontent-icn2-1.cdninstagram.com/v/t51.82787-15/858088463_18104483786322426_236931584991937919_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=111&ig_cache_key=NDAxMzg2MDI5NzczMTA1MTkwNQ%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA1Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=abSU9AcNix8Q7kNvwEqceu5&_nc_oc=AdpytV30pLKnvieKjhr6_p08qS9EjeXiuYZgHroAg-pDhd1Giojo32C1sjr_-CNSAn0&_nc_zt=23&_nc_ht=scontent-icn2-1.cdninstagram.com&_nc_gid=HhYgKIn4t4P22a7MYiv1ew&_nc_ss=7960f&oh=00_AQNqVWAz5sbt0esPyeIWZl9liJrG0Hld_-GqJC9jv8PWOQ&oe=6AE08706",
-      "sourcePost": "https://www.instagram.com/p/De0GKyoTZGB/",
-      "sourcePostedAt": "2026-10-22T22:51:06Z",
+      "sourceImage": "https://scontent-icn2-1.cdninstagram.com/v/t51.82787-15/860027930_18105011840322426_1563283992795028260_n.jpg?stp=c0.195.1170.1170a_dst-jpg_e35_s1080x1080_sh2.08_tt6&_nc_cat=101&ig_cache_key=NDAxNjAwNTM0MzY0MTE1NTExMA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMTE3MC5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=jCVeuzPLl3YQ7kNvwFmMF4o&_nc_oc=AdoApKlhRnbO-QoLK9onOQ54_w3PPxHkZgaewpzfV782Ta6K3qINH1URTArUyF1NCjQ&_nc_zt=23&_nc_ht=scontent-icn2-1.cdninstagram.com&_nc_gid=JoPeH7GPDuZwEMMX1Pa7iQ&_nc_ss=7960f&oh=00_AQM5td-uk-xHVXWZwwoV4Qd6hnc2JsP2J3F-vDJomSP4Rw&oe=6AE476FD",
+      "sourcePost": "https://www.instagram.com/p/De7vMQaE6jD/",
+      "sourcePostedAt": "2026-10-25T22:04:05Z",
       "image": "./images/kjfood.jpg"
     }
   ]
