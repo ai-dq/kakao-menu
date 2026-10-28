@@ -9,8 +9,8 @@ webhook, and publishes a static web view under `docs/`.
   optional rendered CSS selector
 - `send_kakao_menus.sh`: downloads all configured menus, posts one combined
   Teams card, refreshes `docs/`, and pushes web updates when the repo is clean
-- `download_instagram_menu.py`: downloads the latest image post from `kjfo_od`
-  (including carousel images) using Instaloader
+- `download_instagram_menu.py`: finds the latest verified menu board from
+  `kjfo_od` using Instaloader, with a public embed fallback
 - `example.env`: environment variable template
 - `docs/`: static frontend and latest published menu assets
 
@@ -65,12 +65,25 @@ from the `docs/` directory on the `main` branch.
 ## Instagram: kjfo_od
 
 The scheduled run includes https://www.instagram.com/kjfo_od/ as the seventh
-source in both the web view and the combined Teams menu board. It selects the
-newest image post from the first 12 profile entries by publication time (to
-account for pinned posts), skips videos, and combines carousel images vertically.
-This assumes the account posts its menus as image posts. The web card shows the
-original publication date and links to the post; a latest post may be older than
-today. The account handle is used as the label until its restaurant name is verified.
+source in both the web view and the combined Teams menu board. It searches the
+first 12 profile entries by publication time (to account for pinned posts),
+skipping videos, food photos, and advertisements. Every still image in each
+carousel is checked, not just the cover. Only verified menu boards from the
+newest matching post are combined vertically; food photos are never used as a
+fallback. The public embed fallback uses the same filtering.
+
+The image check is specific to this account's current template: a portrait board
+with a predominantly light peach background and multiple rows of both red and
+blue menu text. It runs locally using Pillow, without OCR or external AI APIs.
+If the restaurant changes its template, the detector must be updated; unknown
+layouts are rejected conservatively. Captions alone are not trusted because food
+photos can also mention menus.
+
+The web card shows the original publication date and links to the selected post.
+This is the latest verified menu, not necessarily today's menu: an 08:00 run may
+find an older board if today's has not been posted yet. No new freshness cutoff
+is imposed. The account handle is used as the label until its restaurant name
+is verified.
 
 `uv` installs Instaloader 4.15.3 and Pillow in its cache, without a project venv.
 Anonymous access is attempted by default. If Instagram requires login, export
@@ -83,10 +96,17 @@ export INSTAGRAM_SESSION_FILE="/absolute/path/to/session-your-instagram-login"
 
 Keep the session file outside this repository. Never commit login sessions.
 The Instagram step has a 180-second timeout. On login/network/download failure,
-its image is cleared and a placeholder is generated while other sources continue.
+or when no matching menu board is found, its image is cleared and a placeholder
+is generated while other sources continue.
 To check just this source without publication or notification:
 
 ```bash
 uv run --with instaloader==4.15.3 --with pillow python download_instagram_menu.py \
   kjfo_od /tmp/kjfood.jpg /tmp/kjfood.json
+```
+
+Run the detector and feed-selection regression tests (no network required):
+
+```bash
+uv run --with instaloader==4.15.3 --with pillow python -m unittest discover -s tests -v
 ```

@@ -9,14 +9,22 @@ import json
 import os
 import re
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 import instaloader
 import requests
-from PIL import Image
+from PIL import Image, ImageOps
 
 
-def select_via_instaloader(username: str) -> tuple[list[str], str, str]:
+@dataclass(frozen=True)
+class ImagePost:
+    urls: list[str]
+    shortcode: str
+    posted_at: str
+
+
+def select_via_instaloader(username: str) -> list[ImagePost]:
     loader = instaloader.Instaloader(
         quiet=True, max_connection_attempts=1, request_timeout=20,
         iphone_support=False,
@@ -35,23 +43,20 @@ def select_via_instaloader(username: str) -> tuple[list[str], str, str]:
         key=lambda post: post.date_utc,
         reverse=True,
     )
-    selected_post = None
-    urls = []
+    candidates = []
     for post in posts:
         if post.typename == "GraphSidecar":
             urls = [node.display_url for node in post.get_sidecar_nodes() if not node.is_video]
         elif not post.is_video:
             urls = [post.url]
+        else:
+            urls = []
         if urls:
-            selected_post = post
-            break
-    if selected_post is None:
-        raise ValueError("No image posts found among the 12 most recent profile entries.")
-
-    return urls, selected_post.shortcode, selected_post.date_utc.isoformat() + "Z"
+            candidates.append(ImagePost(urls, post.shortcode, post.date_utc.isoformat() + "Z"))
+    return candidates
 
 
-def select_via_embed(username: str) -> tuple[list[str], str, str]:
+def select_via_embed(username: str) -> list[ImagePost]:
     """Login-free fallback: the public profile embed page lists recent posts."""
     response = requests.get(
         f"https://www.instagram.com/{username}/embed/",
@@ -70,7 +75,8 @@ def select_via_embed(username: str) -> tuple[list[str], str, str]:
         key=lambda node: node.get("taken_at_timestamp", 0),
         reverse=True,
     )
-    for node in nodes:
+    candidates = []
+    for node in nodes[:12]:
         children = [edge["node"] for edge in (node.get("edge_sidecar_to_children") or {}).get("edges", [])]
         if children:
             urls = [child["display_url"] for child in children if not child.get("is_video")]
@@ -82,26 +88,77 @@ def select_via_embed(username: str) -> tuple[list[str], str, str]:
             posted_at = datetime.datetime.fromtimestamp(
                 node["taken_at_timestamp"], datetime.timezone.utc
             ).replace(tzinfo=None)
-            return urls, node["shortcode"], posted_at.isoformat() + "Z"
-    raise ValueError("No image posts found in the profile embed.")
+            candidates.append(ImagePost(urls, node["shortcode"], posted_at.isoformat() + "Z"))
+    return candidates
+
+
+def is_menu_board(image: Image.Image) -> bool:
+    """Recognize kjfo_od's peach board with rows of red AND blue menu text.
+
+    Deliberately account-specific and conservative: captions/hashtags also occur
+    on food photos. Color coverage alone also matches some food/advertisements,
+    so require several separate text-colored bands in the center of the board.
+    No OCR service, credentials or additional runtime dependencies are needed.
+    """
+    if not 0.5 <= image.width / image.height <= 1.1:
+        return False
+    sample = image.convert("RGB").resize((240, 320), Image.Resampling.LANCZOS)
+    pixels = sample.load()
+    background = 0
+    red_rows, blue_rows = [], []
+    for y in range(320):
+        red, blue = 0, 0
+        for x in range(240):
+            r, g, b = pixels[x, y]
+            background += (
+                r >= 225 and 180 <= g <= 235 and 130 <= b <= 200
+                and 20 <= r - g <= 70 and 25 <= g - b <= 75
+            )
+            if 36 <= x < 204:
+                red += r > 150 and r > g * 1.5 and r > b * 1.4
+                blue += b > 90 and b > r * 1.15 and g > r * 1.1
+        # Ignore the logo/title and footer; inspect the menu list itself.
+        if 60 <= y < 294:
+            red_rows.append(red >= 14)
+            blue_rows.append(blue >= 14)
+
+    def bands(rows: list[bool]) -> int:
+        return sum(active and (i == 0 or not rows[i - 1]) for i, active in enumerate(rows))
+
+    return background / (240 * 320) >= 0.4 and bands(red_rows) >= 4 and bands(blue_rows) >= 3
 
 
 def download_menu(username: str, output: Path) -> dict:
     try:
-        urls, shortcode, posted_at = select_via_instaloader(username)
+        posts = select_via_instaloader(username)
     except Exception as error:
         print(f"Instaloader failed ({type(error).__name__}); trying public embed.", file=sys.stderr)
-        urls, shortcode, posted_at = select_via_embed(username)
+        posts = select_via_embed(username)
 
-    images = []
-    for url in urls:
-        response = requests.get(url, timeout=30)
-        response.raise_for_status()
-        with Image.open(io.BytesIO(response.content)) as source:
-            converted = source.convert("RGB")
-        width = min(converted.width, 1440)
-        height = max(1, round(converted.height * width / converted.width))
-        images.append(converted.resize((width, height), Image.Resampling.LANCZOS))
+    # Search past food-photo posts, and inspect every still image in a carousel.
+    # Stop at the newest post containing a verified board, not the newest image.
+    for post in posts:
+        images, urls = [], []
+        for url in post.urls:
+            try:
+                response = requests.get(url, timeout=15)
+                response.raise_for_status()
+                with Image.open(io.BytesIO(response.content)) as source:
+                    converted = ImageOps.exif_transpose(source).convert("RGB")
+            except (requests.RequestException, OSError, ValueError) as error:
+                print(f"Skipping image in {post.shortcode} ({type(error).__name__}).", file=sys.stderr)
+                continue
+            if not is_menu_board(converted):
+                continue
+            width = min(converted.width, 1440)
+            height = max(1, round(converted.height * width / converted.width))
+            images.append(converted.resize((width, height), Image.Resampling.LANCZOS))
+            urls.append(url)
+        if images:
+            break
+        print(f"Skipping {post.shortcode}: no verified menu board.", file=sys.stderr)
+    else:
+        raise ValueError("No verified kjfo_od menu board found in recent posts.")
 
     width = max(image.width for image in images)
     canvas = Image.new("RGB", (width, sum(image.height for image in images)), "white")
@@ -119,8 +176,8 @@ def download_menu(username: str, output: Path) -> dict:
 
     return {
         "sourceImage": urls[0],
-        "sourcePost": f"https://www.instagram.com/p/{shortcode}/",
-        "sourcePostedAt": posted_at,
+        "sourcePost": f"https://www.instagram.com/p/{post.shortcode}/",
+        "sourcePostedAt": post.posted_at,
     }
 
 
@@ -138,6 +195,7 @@ def main() -> int:
         output.unlink(missing_ok=True)
         metadata.unlink(missing_ok=True)
         print(f"Instagram menu unavailable ({type(error).__name__}). "
+              "A matching menu board and accessible images are required. "
               "If login is required, configure INSTAGRAM_USERNAME and INSTAGRAM_SESSION_FILE.",
               file=sys.stderr)
         return 1

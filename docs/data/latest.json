@@ -1,6 +1,6 @@
 {
   "date": "2026-10-29",
-  "updatedAt": "2026-10-29T08:00:35+09:00",
+  "updatedAt": "2026-10-29T08:23:46+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -75,9 +75,9 @@
       "displayName": "kjfo_od (인스타그램)",
       "sourceLabel": "인스타그램",
       "sourcePage": "https://www.instagram.com/kjfo_od/",
-      "sourceImage": "https://scontent-ssn1-1.cdninstagram.com/v/t51.82787-15/868158685_18105412607322426_5451343143176952657_n.jpg?stp=dst-jpegr_e35_p1080x1080_tt6&_nc_cat=104&ig_cache_key=NDAxNzU3OTk5MjcyMDEwOTU0MA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMzAyNC5oZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=EAN7IbLd_goQ7kNvwFWSHgz&_nc_oc=AdqTxuqjYgrRtwNMatpkzbugGCO9ExTy6y2lUfXekyqTfKna8iKttXDDszmhSwzUED4&_nc_zt=23&se=-1&_nc_ht=scontent-ssn1-1.cdninstagram.com&_nc_gid=l1oEFmEm72vLUMnjWkHl8w&_nc_ss=7960f&oh=00_AQQmkHxt2K5iFL8ebwjM8olxQPfAQAGudlH0cyMybP_ZRw&oe=6AE85902",
-      "sourcePost": "https://www.instagram.com/p/DfBUFwCmJoy/",
-      "sourcePostedAt": "2026-10-28T02:02:42Z",
+      "sourceImage": "https://scontent-ssn1-1.cdninstagram.com/v/t51.82787-15/871003215_18105389333322426_4870564478276848057_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=103&ig_cache_key=NDAxNzQ3Mjk3MDc2NzE3NDY5Ng%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA1Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=iUJvE_6UWK0Q7kNvwEnUBUz&_nc_oc=Adpo6zi9Gy_AvBDwlQXmhm_Rxy9k5ft_qgIB5DjncFut2DU4aQXjrZhH-cKxoW9GVDg&_nc_zt=23&_nc_ht=scontent-ssn1-1.cdninstagram.com&_nc_gid=CqsoZbfdHAWluh37cPoHYw&_nc_ss=7960f&oh=00_AQTG1RFjY34QQfmaFmohVp5IWp9dWbpX_-Zad1uxlTn4pA&oe=6AE8711C",
+      "sourcePost": "https://www.instagram.com/p/DfA7mGlT4wo/",
+      "sourcePostedAt": "2026-10-27T22:29:01Z",
       "image": "./images/kjfood.jpg"
     }
   ]

@@ -8,6 +8,7 @@
 !docs/images/*.jpg
 !docs/images/*.jpeg
 !docs/images/*.png
+!tests/fixtures/instagram/*.jpg
 __pycache__
 .playwright-cli
 *.pyc
