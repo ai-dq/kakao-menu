@@ -1,6 +1,6 @@
 {
   "date": "2026-11-10",
-  "updatedAt": "2026-11-10T08:00:31+09:00",
+  "updatedAt": "2026-11-10T10:00:36+09:00",
   "combinedImage": "./images/menu-board.jpg",
   "menus": [
     {
@@ -41,7 +41,7 @@
       "name": "온정 한식 뷔페",
       "displayName": "온정 한식 뷔페",
       "sourcePage": "https://pf.kakao.com/_BdwNn",
-      "sourceImage": "https://k.kakaocdn.net/dn/RwucB/dJMcafWoDGt/oDMsQecKBsa0K257eK5YkK/img_xl.jpg",
+      "sourceImage": "https://k.kakaocdn.net/dn/EbZCy/dJMcaaHAS4W/lBH7bn3KY121Mk3z7UNdE0/img_xl.jpg",
       "image": "./images/onjeong-hansik-buffet.jpg",
       "naverMap": "https://map.naver.com/v5/search/온정한식뷔페",
       "lat": 37.4850,
@@ -52,8 +52,8 @@
       "name": "윤쉐프 코오롱",
       "displayName": "윤쉐프 코오롱",
       "sourcePage": "https://pf.kakao.com/_Xxhxkhs",
-      "sourceImage": null,
-      "image": null,
+      "sourceImage": "https://k.kakaocdn.net/dn/ejp3qJ/dJMcaieAxjR/MM6RIxthqP3TEvrKScSk7K/img_xl.jpg",
+      "image": "./images/yoonchef-kolon.jpg",
       "naverMap": "https://map.naver.com/v5/search/윤쉐프코오롱",
       "lat": 37.4853,
       "lng": 126.8931
@@ -63,8 +63,8 @@
       "name": "벽산더이룸",
       "displayName": "벽산더이룸",
       "sourcePage": "https://pf.kakao.com/_xdLzxgG",
-      "sourceImage": null,
-      "image": null,
+      "sourceImage": "https://k.kakaocdn.net/dn/l5ltE/dJMb999xS2O/fQKHu2aRtKcw2ftCA2Pch1/img_xl.jpg",
+      "image": "./images/byeoksan-theeroom.jpg",
       "naverMap": "https://map.naver.com/v5/search/벽산더이룸",
       "lat": 37.4856,
       "lng": 126.8942
@@ -75,7 +75,7 @@
       "displayName": "kjfo_od (인스타그램)",
       "sourceLabel": "인스타그램",
       "sourcePage": "https://www.instagram.com/kjfo_od/",
-      "sourceImage": "https://scontent-ssn1-1.cdninstagram.com/v/t51.82787-15/894503021_18107540597322426_7356167585455743767_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=NDAyNjg2NDk1MzMxNDYzNzU1Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA1Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=kL70YyPwc0YQ7kNvwFXJcy-&_nc_oc=Adqd_fq-ddreCWDH7HVwoHYgmbxnM--Cc5X1q0TPpp336LpfWdDribsg_sikqy6MzDQ&_nc_zt=23&_nc_ht=scontent-ssn1-1.cdninstagram.com&_nc_gid=QNYbWguLBvIejL6AHKnPNw&_nc_ss=7960f&oh=00_AQS8hT3A4UPVQllOTJ97j5wJPsHrnGAn8ZWqJyhqhjv_0w&oe=6AF81C54",
+      "sourceImage": "https://scontent-ssn1-1.cdninstagram.com/v/t51.82787-15/894503021_18107540597322426_7356167585455743767_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=104&ig_cache_key=NDAyNjg2NDk1MzMxNDYzNzU1Mw%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA1Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&_nc_ohc=kL70YyPwc0YQ7kNvwFXJcy-&_nc_oc=Adqd_fq-ddreCWDH7HVwoHYgmbxnM--Cc5X1q0TPpp336LpfWdDribsg_sikqy6MzDQ&_nc_zt=23&_nc_ht=scontent-ssn1-1.cdninstagram.com&_nc_gid=UuNT4Zr8IuRWD8ioPjTezg&_nc_ss=7960f&oh=00_AQRBxnfU-hjn-oi-nRsfW9UGlALh9JtM8Tjah2JulPvXzQ&oe=6AF85494",
       "sourcePost": "https://www.instagram.com/p/DfiTFb8yfbx/",
       "sourcePostedAt": "2026-11-09T21:29:08Z",
       "image": "./images/kjfood.jpg"
